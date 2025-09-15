@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Calendar, MapPin, Truck, Wrench, Search, User, Menu, X, Star, Clock, Users, Camera, Compass, Mountain } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Calendar, MapPin, Truck, Wrench, Search, User, Menu, X, Star, Clock, Users, Camera, Compass, Mountain, Heart, Share2, Filter, Zap, TrendingUp, Award, MessageCircle, Bell, Globe, Wifi, Coffee, Car, Music, Shield, CheckCircle, AlertCircle, XCircle, Eye, ThumbsUp, Bookmark, Gift, CreditCard, Smartphone, Cloud, Route, MoreHorizontal, DollarSign, CloudRain, Navigation, AlertTriangle, Umbrella, Sun, Wind, Thermometer, Banknote, Calculator, MapIcon, Phone, FileText, Settings, Moon } from 'lucide-react';
 
 interface Event {
   id: string;
@@ -12,6 +12,10 @@ interface Event {
   attendees: number;
   organizer: string;
   image: string;
+  recommendedTransport?: string[];
+  recommendedEquipment?: string[];
+  duration?: string;
+  difficulty?: 'Easy' | 'Moderate' | 'Challenging';
 }
 
 interface Transport {
@@ -34,6 +38,113 @@ interface Equipment {
   image: string;
 }
 
+interface Venue {
+  id: string;
+  name: string;
+  category: string;
+  location: string;
+  capacity: number;
+  pricePerDay: number;
+  rating: number;
+  amenities: string[];
+  availability: {
+    date: string;
+    status: 'available' | 'booked' | 'maintenance';
+  }[];
+  image: string;
+  description: string;
+}
+
+interface PaymentRate {
+  id: string;
+  service: string;
+  baseRate: number;
+  currency: string;
+  fees: {
+    processing: number;
+    platform: number;
+    international?: number;
+  };
+  acceptedMethods: string[];
+}
+
+interface WeatherData {
+  location: string;
+  current: {
+    temperature: number;
+    condition: string;
+    humidity: number;
+    windSpeed: number;
+    icon: string;
+  };
+  forecast: {
+    date: string;
+    high: number;
+    low: number;
+    condition: string;
+    icon: string;
+    precipitation: number;
+  }[];
+}
+
+interface TravelPlan {
+  id: string;
+  destination: string;
+  duration: string;
+  budget: number;
+  activities: string[];
+  accommodation: string;
+  transport: string;
+  bestTime: string;
+  difficulty: 'Easy' | 'Moderate' | 'Challenging';
+}
+
+interface SafetyInfo {
+  id: string;
+  location: string;
+  riskLevel: 'Low' | 'Medium' | 'High';
+  alerts: string[];
+  emergencyContacts: {
+    police: string;
+    medical: string;
+    tourist: string;
+  };
+  recommendations: string[];
+  lastUpdated: string;
+}
+
+interface TourismAgency {
+  id: string;
+  name: string;
+  description: string;
+  location: string;
+  established: number;
+  rating: number;
+  reviewCount: number;
+  specialties: string[];
+  services: string[];
+  certifications: string[];
+  contactInfo: {
+    phone: string;
+    email: string;
+    website: string;
+    whatsapp?: string;
+  };
+  priceRange: 'Budget' | 'Mid-Range' | 'Luxury';
+  languages: string[];
+  image: string;
+  gallery: string[];
+  packages: {
+    name: string;
+    duration: string;
+    price: number;
+    highlights: string[];
+  }[];
+  verified: boolean;
+  licenseNumber: string;
+  insurance: boolean;
+}
+
 const sampleEvents: Event[] = [
   {
     id: '1',
@@ -45,7 +156,11 @@ const sampleEvents: Event[] = [
     rating: 4.8,
     attendees: 24,
     organizer: 'Mountain Guides Co.',
-    image: 'https://images.pexels.com/photos/1365425/pexels-photo-1365425.jpeg?auto=compress&cs=tinysrgb&w=400'
+    image: 'https://images.pexels.com/photos/1365425/pexels-photo-1365425.jpeg?auto=compress&cs=tinysrgb&w=400',
+    recommendedTransport: ['1'], // Mountain Shuttle Service
+    recommendedEquipment: ['1', '3'], // Hiking Backpack, Camping Tent
+    duration: '6 hours',
+    difficulty: 'Moderate'
   },
   {
     id: '2',
@@ -57,7 +172,11 @@ const sampleEvents: Event[] = [
     rating: 4.9,
     attendees: 16,
     organizer: 'Valley Wines LLC',
-    image: 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=400'
+    image: 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=400',
+    recommendedTransport: ['2'], // Valley Express
+    recommendedEquipment: [], // No special equipment needed
+    duration: '4 hours',
+    difficulty: 'Easy'
   },
   {
     id: '3',
@@ -69,7 +188,11 @@ const sampleEvents: Event[] = [
     rating: 4.7,
     attendees: 12,
     organizer: 'Photo Pro Academy',
-    image: 'https://images.pexels.com/photos/1264210/pexels-photo-1264210.jpeg?auto=compress&cs=tinysrgb&w=400'
+    image: 'https://images.pexels.com/photos/1264210/pexels-photo-1264210.jpeg?auto=compress&cs=tinysrgb&w=400',
+    recommendedTransport: ['3'], // City Tours Inc.
+    recommendedEquipment: ['2'], // DSLR Camera Kit
+    duration: '3 hours',
+    difficulty: 'Easy'
   }
 ];
 
@@ -133,29 +256,490 @@ const sampleEquipment: Equipment[] = [
   }
 ];
 
+const samplePaymentRates: PaymentRate[] = [
+  {
+    id: '1',
+    service: 'Event Booking',
+    baseRate: 2.9,
+    currency: 'USD',
+    fees: {
+      processing: 0.30,
+      platform: 1.5,
+      international: 1.5
+    },
+    acceptedMethods: ['Credit Card', 'PayPal', 'Apple Pay', 'Google Pay', 'Bank Transfer']
+  },
+  {
+    id: '2',
+    service: 'Venue Rental',
+    baseRate: 3.5,
+    currency: 'USD',
+    fees: {
+      processing: 0.50,
+      platform: 2.0
+    },
+    acceptedMethods: ['Credit Card', 'Bank Transfer', 'Check']
+  },
+  {
+    id: '3',
+    service: 'Equipment Rental',
+    baseRate: 2.5,
+    currency: 'USD',
+    fees: {
+      processing: 0.25,
+      platform: 1.0
+    },
+    acceptedMethods: ['Credit Card', 'PayPal', 'Cash']
+  }
+];
+
+const sampleWeatherData: WeatherData = {
+  location: 'Denver, CO',
+  current: {
+    temperature: 72,
+    condition: 'Partly Cloudy',
+    humidity: 45,
+    windSpeed: 8,
+    icon: 'partly-cloudy'
+  },
+  forecast: [
+    { date: '2025-02-15', high: 75, low: 52, condition: 'Sunny', icon: 'sunny', precipitation: 0 },
+    { date: '2025-02-16', high: 68, low: 48, condition: 'Cloudy', icon: 'cloudy', precipitation: 20 },
+    { date: '2025-02-17', high: 62, low: 45, condition: 'Rain', icon: 'rainy', precipitation: 80 },
+    { date: '2025-02-18', high: 70, low: 50, condition: 'Partly Cloudy', icon: 'partly-cloudy', precipitation: 10 },
+    { date: '2025-02-19', high: 73, low: 55, condition: 'Sunny', icon: 'sunny', precipitation: 0 }
+  ]
+};
+
+const sampleTravelPlans: TravelPlan[] = [
+  {
+    id: '1',
+    destination: 'Rocky Mountain National Park',
+    duration: '3 days',
+    budget: 450,
+    activities: ['Hiking', 'Wildlife Viewing', 'Photography', 'Camping'],
+    accommodation: 'Mountain Lodge',
+    transport: 'Rental Car',
+    bestTime: 'June - September',
+    difficulty: 'Moderate'
+  },
+  {
+    id: '2',
+    destination: 'Napa Valley Wine Tour',
+    duration: '2 days',
+    budget: 650,
+    activities: ['Wine Tasting', 'Vineyard Tours', 'Fine Dining', 'Spa'],
+    accommodation: 'Boutique Hotel',
+    transport: 'Private Van',
+    bestTime: 'April - October',
+    difficulty: 'Easy'
+  },
+  {
+    id: '3',
+    destination: 'Grand Canyon Adventure',
+    duration: '4 days',
+    budget: 800,
+    activities: ['Hiking', 'River Rafting', 'Helicopter Tour', 'Stargazing'],
+    accommodation: 'Canyon Lodge',
+    transport: 'Tour Bus',
+    bestTime: 'March - May, September - November',
+    difficulty: 'Challenging'
+  }
+];
+
+const sampleUgandanAgencies: TourismAgency[] = [
+  {
+    id: '1',
+    name: 'Pearl of Africa Safaris',
+    description: 'Premier safari company specializing in gorilla trekking, wildlife safaris, and cultural experiences across Uganda. Family-owned business with 15+ years of experience.',
+    location: 'Kampala, Uganda',
+    established: 2008,
+    rating: 4.9,
+    reviewCount: 247,
+    specialties: ['Gorilla Trekking', 'Wildlife Safaris', 'Cultural Tours', 'Adventure Sports'],
+    services: ['Airport Transfers', 'Accommodation Booking', 'Permit Arrangements', 'Professional Guides', '4WD Vehicles'],
+    certifications: ['Uganda Tourism Board Licensed', 'IATA Certified', 'ISO 9001:2015'],
+    contactInfo: {
+      phone: '+256 700 123456',
+      email: 'info@pearlofafricasafaris.com',
+      website: 'www.pearlofafricasafaris.com',
+      whatsapp: '+256 700 123456'
+    },
+    priceRange: 'Mid-Range',
+    languages: ['English', 'Swahili', 'Luganda', 'French', 'German'],
+    image: 'https://images.pexels.com/photos/631317/pexels-photo-631317.jpeg?auto=compress&cs=tinysrgb&w=400',
+    gallery: [
+      'https://images.pexels.com/photos/631317/pexels-photo-631317.jpeg?auto=compress&cs=tinysrgb&w=400',
+      'https://images.pexels.com/photos/1170986/pexels-photo-1170986.jpeg?auto=compress&cs=tinysrgb&w=400'
+    ],
+    packages: [
+      {
+        name: 'Bwindi Gorilla Experience',
+        duration: '3 Days',
+        price: 1250,
+        highlights: ['Gorilla Trekking Permit', 'Professional Guide', 'Luxury Lodge', 'All Meals']
+      },
+      {
+        name: 'Uganda Wildlife Circuit',
+        duration: '7 Days',
+        price: 2800,
+        highlights: ['Queen Elizabeth NP', 'Murchison Falls', 'Kibale Forest', 'Game Drives']
+      }
+    ],
+    verified: true,
+    licenseNumber: 'UTB/TT/82756',
+    insurance: true
+  },
+  {
+    id: '2',
+    name: 'Nile River Explorers',
+    description: 'Adventure tourism specialists focusing on white water rafting, bungee jumping, and Nile River activities. Safety-certified with international standards.',
+    location: 'Jinja, Uganda',
+    established: 2012,
+    rating: 4.8,
+    reviewCount: 189,
+    specialties: ['White Water Rafting', 'Bungee Jumping', 'Kayaking', 'River Cruises'],
+    services: ['Safety Equipment', 'Professional Instructors', 'Photography Services', 'Transport'],
+    certifications: ['International Rafting Federation', 'Uganda Tourism Board', 'First Aid Certified'],
+    contactInfo: {
+      phone: '+256 701 987654',
+      email: 'adventures@nileexplorers.ug',
+      website: 'www.nileriverexplorers.com',
+      whatsapp: '+256 701 987654'
+    },
+    priceRange: 'Budget',
+    languages: ['English', 'Swahili', 'Luganda'],
+    image: 'https://images.pexels.com/photos/416978/pexels-photo-416978.jpeg?auto=compress&cs=tinysrgb&w=400',
+    gallery: [
+      'https://images.pexels.com/photos/416978/pexels-photo-416978.jpeg?auto=compress&cs=tinysrgb&w=400'
+    ],
+    packages: [
+      {
+        name: 'Nile Rapids Adventure',
+        duration: '1 Day',
+        price: 95,
+        highlights: ['Grade 5 Rapids', 'Safety Briefing', 'Lunch Included', 'Photos & Videos']
+      },
+      {
+        name: 'Extreme Jinja Package',
+        duration: '2 Days',
+        price: 180,
+        highlights: ['Rafting', 'Bungee Jump', 'Quad Biking', 'Accommodation']
+      }
+    ],
+    verified: true,
+    licenseNumber: 'UTB/TT/91234',
+    insurance: true
+  },
+  {
+    id: '3',
+    name: 'Rwenzori Mountaineering Services',
+    description: 'Specialized mountain climbing and trekking company for the Rwenzori Mountains (Mountains of the Moon). Expert guides and high-altitude experience.',
+    location: 'Kasese, Uganda',
+    established: 2005,
+    rating: 4.7,
+    reviewCount: 156,
+    specialties: ['Mountain Climbing', 'High Altitude Trekking', 'Nature Walks', 'Bird Watching'],
+    services: ['Mountain Guides', 'Climbing Equipment', 'Porter Services', 'Emergency Rescue'],
+    certifications: ['Mountain Guide Association', 'Wilderness First Aid', 'Uganda Tourism Board'],
+    contactInfo: {
+      phone: '+256 702 456789',
+      email: 'climb@rwenzorimountains.ug',
+      website: 'www.rwenzorimountaineering.com',
+      whatsapp: '+256 702 456789'
+    },
+    priceRange: 'Mid-Range',
+    languages: ['English', 'Swahili', 'Lukonzo', 'French'],
+    image: 'https://images.pexels.com/photos/618833/pexels-photo-618833.jpeg?auto=compress&cs=tinysrgb&w=400',
+    gallery: [
+      'https://images.pexels.com/photos/618833/pexels-photo-618833.jpeg?auto=compress&cs=tinysrgb&w=400'
+    ],
+    packages: [
+      {
+        name: 'Margherita Peak Expedition',
+        duration: '9 Days',
+        price: 1850,
+        highlights: ['Summit Attempt', 'Professional Guides', 'All Equipment', 'Mountain Huts']
+      },
+      {
+        name: 'Rwenzori Circuit Trek',
+        duration: '6 Days',
+        price: 1200,
+        highlights: ['Scenic Routes', 'Wildlife Viewing', 'Cultural Encounters', 'Camping']
+      }
+    ],
+    verified: true,
+    licenseNumber: 'UTB/TT/67890',
+    insurance: true
+  },
+  {
+    id: '4',
+    name: 'Kampala Cultural Heritage Tours',
+    description: 'Authentic cultural experiences showcasing Ugandan traditions, history, and local communities. Supporting sustainable tourism and local development.',
+    location: 'Kampala, Uganda',
+    established: 2015,
+    rating: 4.6,
+    reviewCount: 203,
+    specialties: ['Cultural Tours', 'Historical Sites', 'Community Tourism', 'Art & Crafts'],
+    services: ['Cultural Guides', 'Community Visits', 'Craft Workshops', 'Traditional Meals'],
+    certifications: ['Uganda Tourism Board', 'Community Tourism Certified', 'Cultural Heritage Approved'],
+    contactInfo: {
+      phone: '+256 703 567890',
+      email: 'culture@kampalaheritage.ug',
+      website: 'www.kampalaheritage.com',
+      whatsapp: '+256 703 567890'
+    },
+    priceRange: 'Budget',
+    languages: ['English', 'Luganda', 'Swahili', 'French', 'Spanish'],
+    image: 'https://images.pexels.com/photos/1170986/pexels-photo-1170986.jpeg?auto=compress&cs=tinysrgb&w=400',
+    gallery: [
+      'https://images.pexels.com/photos/1170986/pexels-photo-1170986.jpeg?auto=compress&cs=tinysrgb&w=400'
+    ],
+    packages: [
+      {
+        name: 'Kampala City Heritage Walk',
+        duration: '4 Hours',
+        price: 35,
+        highlights: ['Historical Sites', 'Local Markets', 'Traditional Lunch', 'Cultural Guide']
+      },
+      {
+        name: 'Buganda Kingdom Experience',
+        duration: '2 Days',
+        price: 150,
+        highlights: ['Royal Tombs', 'Palace Visit', 'Traditional Ceremonies', 'Craft Making']
+      }
+    ],
+    verified: true,
+    licenseNumber: 'UTB/TT/45678',
+    insurance: true
+  },
+  {
+    id: '5',
+    name: 'Murchison Falls Expeditions',
+    description: 'Luxury safari experiences in Murchison Falls National Park. Specializing in boat safaris, game drives, and exclusive lodge accommodations.',
+    location: 'Masindi, Uganda',
+    established: 2010,
+    rating: 4.9,
+    reviewCount: 178,
+    specialties: ['Luxury Safaris', 'Boat Cruises', 'Game Drives', 'Photography Tours'],
+    services: ['Luxury Vehicles', 'Professional Photographers', 'Exclusive Lodges', 'Private Guides'],
+    certifications: ['Uganda Tourism Board', 'Luxury Travel Association', 'Wildlife Conservation Certified'],
+    contactInfo: {
+      phone: '+256 704 678901',
+      email: 'luxury@murchisonexpeditions.ug',
+      website: 'www.murchisonexpeditions.com',
+      whatsapp: '+256 704 678901'
+    },
+    priceRange: 'Luxury',
+    languages: ['English', 'French', 'German', 'Swahili'],
+    image: 'https://images.pexels.com/photos/1170986/pexels-photo-1170986.jpeg?auto=compress&cs=tinysrgb&w=400',
+    gallery: [
+      'https://images.pexels.com/photos/1170986/pexels-photo-1170986.jpeg?auto=compress&cs=tinysrgb&w=400'
+    ],
+    packages: [
+      {
+        name: 'Murchison Luxury Safari',
+        duration: '4 Days',
+        price: 2200,
+        highlights: ['Luxury Lodge', 'Private Game Drives', 'Nile Boat Safari', 'Gourmet Meals']
+      },
+      {
+        name: 'Photography Masterclass',
+        duration: '5 Days',
+        price: 2800,
+        highlights: ['Professional Photographer', 'Wildlife Photography', 'Editing Workshop', 'Print Portfolio']
+      }
+    ],
+    verified: true,
+    licenseNumber: 'UTB/TT/12345',
+    insurance: true
+  }
+];
+
+const sampleSafetyInfo: SafetyInfo[] = [
+  {
+    id: '1',
+    location: 'Denver, CO',
+    riskLevel: 'Low',
+    alerts: ['High altitude awareness for visitors', 'Weather changes quickly in mountains'],
+    emergencyContacts: {
+      police: '911',
+      medical: '911',
+      tourist: '(303) 892-1505'
+    },
+    recommendations: [
+      'Stay hydrated at high altitude',
+      'Check weather before mountain activities',
+      'Inform someone of your travel plans'
+    ],
+    lastUpdated: '2025-02-14'
+  },
+  {
+    id: '2',
+    location: 'Austin, TX',
+    riskLevel: 'Low',
+    alerts: ['Flash flood warnings during heavy rain'],
+    emergencyContacts: {
+      police: '911',
+      medical: '911',
+      tourist: '(512) 474-5171'
+    },
+    recommendations: [
+      'Avoid low-lying areas during storms',
+      'Stay updated on weather alerts',
+      'Keep emergency supplies in vehicle'
+    ],
+    lastUpdated: '2025-02-14'
+  }
+];
+
+const sampleVenues: Venue[] = [
+  {
+    id: '1',
+    name: 'Mountain View Conference Center',
+    category: 'Conference Hall',
+    location: 'Denver, CO',
+    capacity: 200,
+    pricePerDay: 850,
+    rating: 4.8,
+    amenities: ['WiFi', 'Projector', 'Catering', 'Parking', 'AC'],
+    availability: [
+      { date: '2025-02-15', status: 'available' },
+      { date: '2025-02-16', status: 'booked' },
+      { date: '2025-02-17', status: 'available' },
+      { date: '2025-02-18', status: 'available' },
+      { date: '2025-02-19', status: 'maintenance' },
+    ],
+    image: 'https://images.pexels.com/photos/2747449/pexels-photo-2747449.jpeg?auto=compress&cs=tinysrgb&w=400',
+    description: 'Modern conference center with stunning mountain views'
+  },
+  {
+    id: '2',
+    name: 'Riverside Outdoor Pavilion',
+    category: 'Outdoor Venue',
+    location: 'Austin, TX',
+    capacity: 500,
+    pricePerDay: 1200,
+    rating: 4.9,
+    amenities: ['Stage', 'Sound System', 'Lighting', 'Restrooms', 'Parking'],
+    availability: [
+      { date: '2025-02-15', status: 'available' },
+      { date: '2025-02-16', status: 'available' },
+      { date: '2025-02-17', status: 'booked' },
+      { date: '2025-02-18', status: 'available' },
+      { date: '2025-02-19', status: 'available' },
+    ],
+    image: 'https://images.pexels.com/photos/1190298/pexels-photo-1190298.jpeg?auto=compress&cs=tinysrgb&w=400',
+    description: 'Beautiful outdoor pavilion perfect for festivals and large gatherings'
+  },
+  {
+    id: '3',
+    name: 'Historic Downtown Gallery',
+    category: 'Art Gallery',
+    location: 'Portland, OR',
+    capacity: 80,
+    pricePerDay: 450,
+    rating: 4.7,
+    amenities: ['Gallery Lighting', 'Security', 'Climate Control', 'Reception Area'],
+    availability: [
+      { date: '2025-02-15', status: 'booked' },
+      { date: '2025-02-16', status: 'available' },
+      { date: '2025-02-17', status: 'available' },
+      { date: '2025-02-18', status: 'available' },
+      { date: '2025-02-19', status: 'available' },
+    ],
+    image: 'https://images.pexels.com/photos/1839919/pexels-photo-1839919.jpeg?auto=compress&cs=tinysrgb&w=400',
+    description: 'Elegant gallery space in the heart of downtown'
+  }
+];
+
 type StakeholderType = 'seeker' | 'organizer' | 'transport' | 'equipment';
+type ServiceType = 'payments' | 'weather' | 'planning' | 'safety' | 'misc' | 'agencies';
+
+// Utility functions
+const toggleFavorite = (id: string, favorites: string[], setFavorites: React.Dispatch<React.SetStateAction<string[]>>) => {
+  setFavorites(prev => 
+    prev.includes(id) 
+      ? prev.filter(fav => fav !== id)
+      : [...prev, id]
+  );
+};
+
+const getStatusColor = (status: string) => {
+  switch (status) {
+    case 'available': return 'text-forest-600 bg-forest-100';
+    case 'booked': return 'text-earth-600 bg-earth-100';
+    case 'maintenance': return 'text-stone-600 bg-stone-100';
+    default: return 'text-stone-600 bg-stone-100';
+  }
+};
+
+const notifications = [
+  { id: 1, type: 'booking', message: 'New booking for Mountain Hiking Adventure', time: '2 min ago', unread: true },
+  { id: 2, type: 'review', message: 'You received a 5-star review!', time: '1 hour ago', unread: true },
+  { id: 3, type: 'payment', message: 'Payment of $125 received', time: '3 hours ago', unread: false },
+  { id: 4, type: 'weather', message: 'Perfect weather for outdoor events today!', time: '6 hours ago', unread: false },
+];
 
 function App() {
   const [activeTab, setActiveTab] = useState<StakeholderType>('seeker');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedVenueCategory, setSelectedVenueCategory] = useState('all');
+  const [organizerView, setOrganizerView] = useState<'dashboard' | 'venues' | 'create'>('dashboard');
+  const [favorites, setFavorites] = useState<string[]>([]);
+  const [showFilters, setShowFilters] = useState(false);
+  const [priceRange, setPriceRange] = useState([0, 500]);
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [sortBy, setSortBy] = useState('rating');
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [currentUser] = useState({ name: 'Alex Johnson', avatar: '👤', points: 1250, level: 'Explorer' });
+  const [weatherData] = useState({ temp: 72, condition: 'Sunny', location: 'Denver, CO' });
+  const [liveEvents] = useState(3);
+  const [onlineUsers] = useState(1247);
+  const [activeService, setActiveService] = useState<ServiceType | null>(null);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  const [showBookingModal, setShowBookingModal] = useState(false);
+  const [bookingStep, setBookingStep] = useState<'event' | 'transport' | 'equipment' | 'summary'>('event');
+  const [selectedTransport, setSelectedTransport] = useState<Transport | null>(null);
+  const [selectedEquipment, setSelectedEquipment] = useState<Equipment[]>([]);
+
+  // Toggle dark mode
+  const toggleDarkMode = () => {
+    setIsDarkMode(!isDarkMode);
+    if (!isDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  };
 
   const stakeholderTabs = [
-    { id: 'seeker' as StakeholderType, label: 'Event Seekers', icon: Calendar, color: 'bg-blue-600' },
-    { id: 'organizer' as StakeholderType, label: 'Event Organizers', icon: Users, color: 'bg-orange-600' },
-    { id: 'transport' as StakeholderType, label: 'Transport Providers', icon: Truck, color: 'bg-green-600' },
-    { id: 'equipment' as StakeholderType, label: 'Equipment Rentals', icon: Wrench, color: 'bg-purple-600' }
+    { id: 'seeker' as StakeholderType, label: 'Event Seekers', icon: Calendar, color: 'bg-forest-600' },
+    { id: 'organizer' as StakeholderType, label: 'Event Organizers', icon: Users, color: 'bg-earth-600' },
+    { id: 'transport' as StakeholderType, label: 'Transport Providers', icon: Truck, color: 'bg-sunshine-600' },
+    { id: 'equipment' as StakeholderType, label: 'Equipment Rentals', icon: Wrench, color: 'bg-stone-600' }
+  ];
+
+  const additionalServices = [
+    { id: 'agencies' as ServiceType, label: 'Tourism Agencies', icon: Award, color: 'bg-forest-600', description: 'Verified Ugandan tourism companies' },
+    { id: 'payments' as ServiceType, label: 'Payments & Rates', icon: CreditCard, color: 'bg-earth-600', description: 'Payment processing rates and methods' },
+    { id: 'weather' as ServiceType, label: 'Weather Info', icon: Cloud, color: 'bg-sunshine-600', description: 'Real-time weather and forecasts' },
+    { id: 'planning' as ServiceType, label: 'Travel Planning', icon: Route, color: 'bg-stone-600', description: 'Curated travel plans and itineraries' },
+    { id: 'safety' as ServiceType, label: 'Safety & Security', icon: Shield, color: 'bg-earth-600', description: 'Safety information and emergency contacts' },
+    { id: 'misc' as ServiceType, label: 'Miscellaneous', icon: MoreHorizontal, color: 'bg-forest-600', description: 'Additional travel services and tools' }
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50">
+    <div className="min-h-screen bg-gradient-to-br from-stone-200 via-stone-300 to-stone-400 dark:from-dark-50 dark:via-dark-100 dark:to-dark-200 nature-pattern transition-colors duration-300">
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
+      <header className="bg-white/95 dark:bg-dark-100/95 backdrop-blur-md shadow-lg sticky top-0 z-50 border-b border-stone-300 dark:border-dark-300 transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center space-x-2">
-              <Compass className="h-8 w-8 text-blue-600" />
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-orange-600 bg-clip-text text-transparent">
+              <Compass className="h-8 w-8 text-forest-600 dark:text-forest-400" />
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-forest-600 to-earth-600 dark:from-forest-400 dark:to-earth-400 bg-clip-text text-transparent">
                 TourismHub
               </h1>
             </div>
@@ -171,7 +755,7 @@ function App() {
                     className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-200 ${
                       activeTab === tab.id
                         ? `${tab.color} text-white shadow-lg`
-                        : 'text-gray-700 hover:bg-gray-100'
+                        : 'text-stone-700 hover:bg-earth-100'
                     }`}
                   >
                     <Icon className="h-5 w-5" />
@@ -182,25 +766,123 @@ function App() {
             </nav>
 
             <div className="flex items-center space-x-4">
+              {/* Dark Mode Toggle */}
+              <button
+                onClick={toggleDarkMode}
+                className="p-2 rounded-full bg-white/80 dark:bg-dark-200/80 backdrop-blur-sm border border-earth-200 dark:border-dark-300 hover:bg-white dark:hover:bg-dark-200 transition-colors"
+                title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+              >
+                {isDarkMode ? (
+                  <Sun className="h-5 w-5 text-sunshine-600" />
+                ) : (
+                  <Moon className="h-5 w-5 text-stone-600" />
+                )}
+              </button>
+
+              {/* Weather Widget */}
+              <div className="hidden lg:flex items-center space-x-2 bg-white/80 dark:bg-dark-200/80 backdrop-blur-sm px-3 py-2 rounded-full border border-earth-200 dark:border-dark-300">
+                <div className="text-sunshine-500">☀️</div>
+                <span className="text-sm font-medium text-stone-700 dark:text-dark-800">{weatherData.temp}°F</span>
+                <span className="text-xs text-stone-500 dark:text-dark-700">{weatherData.location}</span>
+              </div>
+
+              {/* Live Stats */}
+              <div className="hidden lg:flex items-center space-x-4 bg-white/80 dark:bg-dark-200/80 backdrop-blur-sm px-4 py-2 rounded-full border border-earth-200 dark:border-dark-300">
+                <div className="flex items-center space-x-1">
+                  <div className="w-2 h-2 bg-forest-500 rounded-full animate-pulse"></div>
+                  <span className="text-sm font-medium text-stone-700 dark:text-dark-800">{liveEvents} Live</span>
+                </div>
+                <div className="flex items-center space-x-1">
+                  <Globe className="h-4 w-4 text-earth-500" />
+                  <span className="text-sm font-medium text-stone-700 dark:text-dark-800">{onlineUsers.toLocaleString()}</span>
+                </div>
+              </div>
+
+              {/* Advanced Search */}
               <div className="relative hidden md:block">
-                <Search className="h-5 w-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
+                <Search className="h-5 w-5 text-stone-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
                 <input
                   type="text"
-                  placeholder="Search..."
+                  placeholder="Search events, venues, transport..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white/50 backdrop-blur-sm"
+                  className="pl-10 pr-12 py-2 w-64 border border-earth-300 rounded-full focus:outline-none focus:ring-2 focus:ring-forest-500 focus:border-transparent bg-white/70 backdrop-blur-sm"
                 />
+                <button 
+                  onClick={() => setShowFilters(!showFilters)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-stone-400 hover:text-forest-600"
+                >
+                  <Filter className="h-4 w-4" />
+                </button>
               </div>
-              <button className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition-colors">
-                <User className="h-5 w-5" />
-                <span>Login</span>
-              </button>
+
+              {/* Notifications */}
+              <div className="relative">
+                <button 
+                  onClick={() => setShowNotifications(!showNotifications)}
+                  className="relative p-2 text-stone-600 hover:text-forest-600 transition-colors"
+                >
+                  <Bell className="h-6 w-6" />
+                  <span className="absolute -top-1 -right-1 bg-earth-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                    {notifications.filter(n => n.unread).length}
+                  </span>
+                </button>
+
+                {/* Notifications Dropdown */}
+                {showNotifications && (
+                  <div className="absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-xl border border-stone-200 z-50">
+                    <div className="p-4 border-b border-stone-200">
+                      <h3 className="font-semibold text-stone-900">Notifications</h3>
+                    </div>
+                    <div className="max-h-64 overflow-y-auto">
+                      {notifications.map((notification) => (
+                        <div key={notification.id} className={`p-4 border-b border-stone-100 hover:bg-stone-50 ${notification.unread ? 'bg-forest-50/30' : ''}`}>
+                          <div className="flex items-start space-x-3">
+                            <div className={`p-1 rounded-full ${notification.unread ? 'bg-forest-100' : 'bg-stone-100'}`}>
+                              {notification.type === 'booking' && <Calendar className="h-4 w-4 text-forest-600" />}
+                              {notification.type === 'review' && <Star className="h-4 w-4 text-sunshine-600" />}
+                              {notification.type === 'payment' && <CreditCard className="h-4 w-4 text-earth-600" />}
+                              {notification.type === 'weather' && <Globe className="h-4 w-4 text-stone-600" />}
+                            </div>
+                            <div className="flex-1">
+                              <p className="text-sm text-stone-900">{notification.message}</p>
+                              <p className="text-xs text-stone-500 mt-1">{notification.time}</p>
+                            </div>
+                            {notification.unread && <div className="w-2 h-2 bg-forest-500 rounded-full"></div>}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="p-3 text-center">
+                      <button className="text-sm text-forest-600 hover:text-forest-700 font-medium">
+                        View All Notifications
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* User Profile */}
+              <div className="flex items-center space-x-3 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full border border-earth-200">
+                <div className="flex items-center space-x-2">
+                  <div className="w-8 h-8 bg-forest-100 rounded-full flex items-center justify-center">
+                    <span className="text-sm">{currentUser.avatar}</span>
+                  </div>
+                  <div className="hidden sm:block">
+                    <p className="text-sm font-medium text-stone-900">{currentUser.name}</p>
+                    <p className="text-xs text-stone-500">{currentUser.level} • {currentUser.points} pts</p>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-1">
+                  <Award className="h-4 w-4 text-sunshine-500" />
+                  <span className="text-sm font-medium text-sunshine-600">{currentUser.points}</span>
+                </div>
+              </div>
               
               {/* Mobile menu button */}
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="lg:hidden p-2 rounded-md text-gray-700 hover:bg-gray-100"
+                className="lg:hidden p-2 rounded-md text-stone-700 hover:bg-earth-100"
               >
                 {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
               </button>
@@ -209,7 +891,7 @@ function App() {
 
           {/* Mobile Navigation */}
           {isMenuOpen && (
-            <div className="lg:hidden py-4 border-t border-gray-200">
+            <div className="lg:hidden py-4 border-t border-earth-200">
               <div className="space-y-2">
                 {stakeholderTabs.map((tab) => {
                   const Icon = tab.icon;
@@ -223,7 +905,7 @@ function App() {
                       className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 ${
                         activeTab === tab.id
                           ? `${tab.color} text-white`
-                          : 'text-gray-700 hover:bg-gray-100'
+                          : 'text-stone-700 hover:bg-earth-100'
                       }`}
                     >
                       <Icon className="h-5 w-5" />
@@ -237,36 +919,99 @@ function App() {
         </div>
       </header>
 
+      {/* Advanced Filters Panel */}
+      {showFilters && (
+        <div className="bg-white/95 backdrop-blur-md border-b border-stone-200 py-4 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-stone-700 mb-2">Category</label>
+                <select 
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                  className="w-full px-3 py-2 border border-earth-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-forest-500"
+                >
+                  <option value="all">All Categories</option>
+                  <option value="Adventure">Adventure</option>
+                  <option value="Culinary">Culinary</option>
+                  <option value="Education">Education</option>
+                  <option value="Entertainment">Entertainment</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-stone-700 mb-2">Price Range</label>
+                <div className="flex items-center space-x-2">
+                  <input 
+                    type="range" 
+                    min="0" 
+                    max="500" 
+                    value={priceRange[1]}
+                    onChange={(e) => setPriceRange([0, parseInt(e.target.value)])}
+                    className="flex-1"
+                  />
+                  <span className="text-sm text-stone-600">${priceRange[1]}</span>
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-stone-700 mb-2">Sort By</label>
+                <select 
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="w-full px-3 py-2 border border-earth-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-forest-500"
+                >
+                  <option value="rating">Highest Rated</option>
+                  <option value="price-low">Price: Low to High</option>
+                  <option value="price-high">Price: High to Low</option>
+                  <option value="date">Newest First</option>
+                  <option value="popular">Most Popular</option>
+                </select>
+              </div>
+              <div className="flex items-end">
+                <button 
+                  onClick={() => setShowFilters(false)}
+                  className="w-full bg-forest-600 text-white py-2 px-4 rounded-lg hover:bg-forest-700 transition-colors"
+                >
+                  Apply Filters
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Hero Section */}
       <section className="relative py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto text-center">
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-stone-900 mb-6">
             Your Gateway to{' '}
-            <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-orange-600 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-forest-600 via-sunshine-600 to-earth-600 bg-clip-text text-transparent">
               Amazing Experiences
             </span>
           </h2>
-          <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+          <p className="text-xl text-stone-600 mb-8 max-w-3xl mx-auto">
             Connect with event organizers, find transportation, rent equipment, and discover unforgettable experiences all in one place.
           </p>
           
-          {/* Category Cards */}
+          {/* Main Category Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
             {stakeholderTabs.map((tab) => {
               const Icon = tab.icon;
               return (
                 <button
                   key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`p-6 rounded-2xl border-2 border-gray-200 bg-white/60 backdrop-blur-sm hover:bg-white transition-all duration-300 group ${
-                    activeTab === tab.id ? 'ring-2 ring-offset-2 ring-blue-500 border-blue-300' : 'hover:border-gray-300'
+                  onClick={() => {
+                    setActiveTab(tab.id);
+                    setActiveService(null);
+                  }}
+                  className={`p-6 rounded-2xl border-2 border-stone-300 bg-white/90 backdrop-blur-sm hover:bg-white transition-all duration-300 group shadow-md ${
+                    activeTab === tab.id && !activeService ? 'ring-2 ring-offset-2 ring-forest-500 border-forest-300 shadow-lg' : 'hover:border-stone-400 hover:shadow-lg'
                   }`}
                 >
                   <div className={`w-16 h-16 mx-auto mb-4 rounded-full ${tab.color} flex items-center justify-center group-hover:scale-110 transition-transform duration-200`}>
                     <Icon className="h-8 w-8 text-white" />
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">{tab.label}</h3>
-                  <p className="text-gray-600 text-sm">
+                  <h3 className="text-lg font-semibold text-stone-900 mb-2">{tab.label}</h3>
+                  <p className="text-stone-600 text-sm">
                     {tab.id === 'seeker' && 'Discover amazing events and experiences'}
                     {tab.id === 'organizer' && 'Create and manage your events'}
                     {tab.id === 'transport' && 'Provide transportation services'}
@@ -276,62 +1021,313 @@ function App() {
               );
             })}
           </div>
+
+          {/* Additional Services Section */}
+          <div className="mt-16">
+            <h3 className="text-2xl font-bold text-stone-900 text-center mb-8">Additional Tourism Services</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+              {additionalServices.map((service) => {
+                const Icon = service.icon;
+                return (
+                  <button
+                    key={service.id}
+                    onClick={() => {
+                      setActiveService(service.id);
+                      setActiveTab('seeker'); // Reset main tab
+                    }}
+                    className={`p-4 rounded-xl border-2 border-stone-300 bg-white/90 backdrop-blur-sm hover:bg-white transition-all duration-300 group shadow-md ${
+                      activeService === service.id ? 'ring-2 ring-offset-2 ring-forest-500 border-forest-300 shadow-lg' : 'hover:border-stone-400 hover:shadow-lg'
+                    }`}
+                  >
+                    <div className={`w-12 h-12 mx-auto mb-3 rounded-full ${service.color} flex items-center justify-center group-hover:scale-110 transition-transform duration-200`}>
+                      <Icon className="h-6 w-6 text-white" />
+                    </div>
+                    <h4 className="text-sm font-semibold text-stone-900 mb-1">{service.label}</h4>
+                    <p className="text-xs text-stone-600">{service.description}</p>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
         </div>
       </section>
 
       {/* Content Section */}
       <section className="py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          {/* Event Seekers Content */}
-          {activeTab === 'seeker' && (
+          {/* Service-Specific Content */}
+          {activeService === 'agencies' && (
             <div>
               <div className="text-center mb-12">
-                <h3 className="text-3xl font-bold text-gray-900 mb-4">Discover Amazing Events</h3>
-                <p className="text-gray-600 max-w-2xl mx-auto">
-                  Find the perfect experience for your next adventure. From outdoor activities to cultural events.
+                <div className="flex items-center justify-center mb-4">
+                  <Award className="h-12 w-12 text-forest-600 mr-4" />
+                  <h3 className="text-3xl font-bold text-stone-900">Verified Ugandan Tourism Agencies</h3>
+                </div>
+                <p className="text-stone-600 max-w-3xl mx-auto">
+                  Connect with legitimate, licensed tourism companies in Uganda. All agencies are verified by the Uganda Tourism Board and offer comprehensive insurance coverage for international tourists.
                 </p>
               </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {sampleEvents.map((event) => (
-                  <div key={event.id} className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden group">
+
+              {/* Filter Options */}
+              <div className="flex flex-wrap justify-center gap-3 mb-8">
+                {['All', 'Gorilla Trekking', 'Adventure Sports', 'Cultural Tours', 'Luxury Safaris', 'Budget Tours'].map((filter) => (
+                  <button
+                    key={filter}
+                    className="px-4 py-2 rounded-full border border-earth-300 text-earth-600 hover:bg-earth-50 transition-colors text-sm"
+                  >
+                    {filter}
+                  </button>
+                ))}
+              </div>
+
+              {/* Agencies Grid */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                {sampleUgandanAgencies.map((agency) => (
+                  <div key={agency.id} className="bg-white rounded-2xl nature-card overflow-hidden">
+                    {/* Agency Header */}
                     <div className="relative">
                       <img
-                        src={event.image}
-                        alt={event.title}
-                        className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                        src={agency.image}
+                        alt={agency.name}
+                        className="w-full h-48 object-cover"
                       />
-                      <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full">
-                        <span className="text-sm font-semibold text-gray-900">${event.price}</span>
+                      <div className="absolute top-4 right-4 flex flex-col gap-2">
+                        {agency.verified && (
+                          <div className="bg-forest-500 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center">
+                            <CheckCircle className="h-3 w-3 mr-1" />
+                            Verified
+                          </div>
+                        )}
+                        <div className={`px-3 py-1 rounded-full text-xs font-medium ${
+                          agency.priceRange === 'Budget' ? 'bg-forest-100 text-forest-800' :
+                          agency.priceRange === 'Mid-Range' ? 'bg-sunshine-100 text-sunshine-800' :
+                          'bg-earth-100 text-earth-800'
+                        }`}>
+                          {agency.priceRange}
+                        </div>
+                      </div>
+                      <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full">
+                        <div className="flex items-center">
+                          <Star className="h-4 w-4 text-sunshine-500 fill-current mr-1" />
+                          <span className="font-semibold text-stone-900">{agency.rating}</span>
+                          <span className="text-stone-600 text-sm ml-1">({agency.reviewCount})</span>
+                        </div>
                       </div>
                     </div>
+
                     <div className="p-6">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
-                          {event.category}
-                        </span>
-                        <div className="flex items-center">
-                          <Star className="h-4 w-4 text-yellow-400 fill-current" />
-                          <span className="text-sm text-gray-600 ml-1">{event.rating}</span>
+                      {/* Agency Info */}
+                      <div className="mb-4">
+                        <div className="flex items-start justify-between mb-2">
+                          <h4 className="text-xl font-bold text-stone-900">{agency.name}</h4>
+                          <span className="text-sm text-stone-500">Est. {agency.established}</span>
+                        </div>
+                        <div className="flex items-center text-sm text-stone-600 mb-2">
+                          <MapPin className="h-4 w-4 mr-1" />
+                          {agency.location}
+                        </div>
+                        <p className="text-stone-600 text-sm leading-relaxed">{agency.description}</p>
+                      </div>
+
+                      {/* Specialties */}
+                      <div className="mb-4">
+                        <h5 className="font-semibold text-stone-900 mb-2">Specialties</h5>
+                        <div className="flex flex-wrap gap-1">
+                          {agency.specialties.map((specialty, index) => (
+                            <span
+                              key={index}
+                              className="bg-forest-100 text-forest-800 text-xs px-2 py-1 rounded"
+                            >
+                              {specialty}
+                            </span>
+                          ))}
                         </div>
                       </div>
-                      <h4 className="text-lg font-semibold text-gray-900 mb-2">{event.title}</h4>
-                      <div className="flex items-center text-sm text-gray-600 mb-2">
-                        <MapPin className="h-4 w-4 mr-1" />
-                        {event.location}
-                      </div>
-                      <div className="flex items-center text-sm text-gray-600 mb-4">
-                        <Clock className="h-4 w-4 mr-1" />
-                        {new Date(event.date).toLocaleDateString()}
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center text-sm text-gray-600">
-                          <Users className="h-4 w-4 mr-1" />
-                          {event.attendees} attendees
+
+                      {/* Certifications */}
+                      <div className="mb-4">
+                        <h5 className="font-semibold text-stone-900 mb-2">Certifications & License</h5>
+                        <div className="space-y-1">
+                          <div className="flex items-center text-sm">
+                            <Shield className="h-4 w-4 text-forest-500 mr-2" />
+                            <span className="text-stone-600">License: {agency.licenseNumber}</span>
+                          </div>
+                          {agency.insurance && (
+                            <div className="flex items-center text-sm">
+                              <CheckCircle className="h-4 w-4 text-forest-500 mr-2" />
+                              <span className="text-stone-600">Comprehensive Insurance Coverage</span>
+                            </div>
+                          )}
                         </div>
-                        <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
-                          Book Now
+                        <div className="flex flex-wrap gap-1 mt-2">
+                          {agency.certifications.map((cert, index) => (
+                            <span
+                              key={index}
+                              className="bg-earth-100 text-earth-800 text-xs px-2 py-1 rounded"
+                            >
+                              {cert}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Languages */}
+                      <div className="mb-4">
+                        <h5 className="font-semibold text-stone-900 mb-2">Languages Spoken</h5>
+                        <div className="flex flex-wrap gap-1">
+                          {agency.languages.map((language, index) => (
+                            <span
+                              key={index}
+                              className="bg-sunshine-100 text-sunshine-800 text-xs px-2 py-1 rounded"
+                            >
+                              {language}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Popular Packages */}
+                      <div className="mb-6">
+                        <h5 className="font-semibold text-stone-900 mb-3">Popular Packages</h5>
+                        <div className="space-y-3">
+                          {agency.packages.slice(0, 2).map((pkg, index) => (
+                            <div key={index} className="bg-stone-50 p-3 rounded-lg">
+                              <div className="flex justify-between items-start mb-2">
+                                <h6 className="font-medium text-stone-900">{pkg.name}</h6>
+                                <div className="text-right">
+                                  <div className="font-bold text-forest-600">${pkg.price}</div>
+                                  <div className="text-xs text-stone-500">{pkg.duration}</div>
+                                </div>
+                              </div>
+                              <div className="flex flex-wrap gap-1">
+                                {pkg.highlights.slice(0, 3).map((highlight, idx) => (
+                                  <span
+                                    key={idx}
+                                    className="bg-white text-stone-600 text-xs px-2 py-0.5 rounded"
+                                  >
+                                    {highlight}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Contact Information */}
+                      <div className="mb-6">
+                        <h5 className="font-semibold text-stone-900 mb-3">Contact Information</h5>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
+                          <div className="flex items-center">
+                            <Phone className="h-4 w-4 text-forest-500 mr-2" />
+                            <span className="text-stone-600">{agency.contactInfo.phone}</span>
+                          </div>
+                          <div className="flex items-center">
+                            <Globe className="h-4 w-4 text-forest-500 mr-2" />
+                            <span className="text-stone-600">{agency.contactInfo.website}</span>
+                          </div>
+                          {agency.contactInfo.whatsapp && (
+                            <div className="flex items-center">
+                              <MessageCircle className="h-4 w-4 text-forest-500 mr-2" />
+                              <span className="text-stone-600">WhatsApp: {agency.contactInfo.whatsapp}</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Action Buttons */}
+                      <div className="flex gap-3">
+                        <button className="flex-1 bg-forest-600 text-white py-3 px-4 rounded-lg hover:bg-forest-700 transition-colors organic-btn font-medium">
+                          Contact Agency
                         </button>
+                        <button className="px-4 py-3 border border-earth-300 text-earth-600 rounded-lg hover:bg-earth-50 transition-colors">
+                          <Heart className="h-4 w-4" />
+                        </button>
+                        <button className="px-4 py-3 border border-earth-300 text-earth-600 rounded-lg hover:bg-earth-50 transition-colors">
+                          <Share2 className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Trust Indicators */}
+              <div className="mt-12 bg-forest-50 rounded-2xl p-8">
+                <h4 className="text-2xl font-bold text-stone-900 text-center mb-6">Why Choose Verified Agencies?</h4>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="text-center">
+                    <div className="w-16 h-16 bg-forest-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Shield className="h-8 w-8 text-white" />
+                    </div>
+                    <h5 className="font-semibold text-stone-900 mb-2">Licensed & Insured</h5>
+                    <p className="text-stone-600 text-sm">All agencies are licensed by Uganda Tourism Board with comprehensive insurance coverage.</p>
+                  </div>
+                  <div className="text-center">
+                    <div className="w-16 h-16 bg-earth-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <CheckCircle className="h-8 w-8 text-white" />
+                    </div>
+                    <h5 className="font-semibold text-stone-900 mb-2">Quality Assured</h5>
+                    <p className="text-stone-600 text-sm">Regular quality checks and customer feedback monitoring ensure excellent service standards.</p>
+                  </div>
+                  <div className="text-center">
+                    <div className="w-16 h-16 bg-sunshine-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Phone className="h-8 w-8 text-white" />
+                    </div>
+                    <h5 className="font-semibold text-stone-900 mb-2">24/7 Support</h5>
+                    <p className="text-stone-600 text-sm">Direct communication with agencies and emergency support throughout your Uganda experience.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeService === 'payments' && (
+            <div>
+              <div className="text-center mb-12">
+                <div className="flex items-center justify-center mb-4">
+                  <CreditCard className="h-12 w-12 text-forest-600 mr-4" />
+                  <h3 className="text-3xl font-bold text-stone-900">Payment Rates & Methods</h3>
+                </div>
+                <p className="text-stone-600 max-w-2xl mx-auto">
+                  Transparent pricing and secure payment options for all tourism services.
+                </p>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {samplePaymentRates.map((rate) => (
+                  <div key={rate.id} className="bg-white rounded-xl nature-card p-6">
+                    <h5 className="text-lg font-semibold text-stone-900 mb-4">{rate.service}</h5>
+                    <div className="space-y-3">
+                      <div className="flex justify-between">
+                        <span className="text-stone-600">Base Rate:</span>
+                        <span className="font-semibold text-forest-600">{rate.baseRate}%</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-stone-600">Processing Fee:</span>
+                        <span className="font-semibold">${rate.fees.processing}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-stone-600">Platform Fee:</span>
+                        <span className="font-semibold">{rate.fees.platform}%</span>
+                      </div>
+                      {rate.fees.international && (
+                        <div className="flex justify-between">
+                          <span className="text-stone-600">International:</span>
+                          <span className="font-semibold">{rate.fees.international}%</span>
+                        </div>
+                      )}
+                    </div>
+                    <div className="mt-4 pt-4 border-t border-stone-200">
+                      <p className="text-sm text-stone-600 mb-2">Accepted Methods:</p>
+                      <div className="flex flex-wrap gap-1">
+                        {rate.acceptedMethods.map((method, index) => (
+                          <span
+                            key={index}
+                            className="bg-forest-100 text-forest-800 text-xs px-2 py-1 rounded"
+                          >
+                            {method}
+                          </span>
+                        ))}
                       </div>
                     </div>
                   </div>
@@ -340,109 +1336,798 @@ function App() {
             </div>
           )}
 
-          {/* Event Organizers Content */}
-          {activeTab === 'organizer' && (
+          {activeService === 'weather' && (
             <div>
               <div className="text-center mb-12">
-                <h3 className="text-3xl font-bold text-gray-900 mb-4">Manage Your Events</h3>
-                <p className="text-gray-600 max-w-2xl mx-auto">
-                  Create, promote, and manage your events with our comprehensive organizer dashboard.
+                <div className="flex items-center justify-center mb-4">
+                  <Cloud className="h-12 w-12 text-sunshine-600 mr-4" />
+                  <h3 className="text-3xl font-bold text-stone-900">Weather Information</h3>
+                </div>
+                <p className="text-stone-600 max-w-2xl mx-auto">
+                  Real-time weather data and forecasts to help you plan your perfect trip.
                 </p>
               </div>
-              
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div className="bg-white rounded-2xl shadow-md p-8">
-                  <h4 className="text-xl font-semibold text-gray-900 mb-6">Create New Event</h4>
-                  <div className="space-y-4">
-                    <input
-                      type="text"
-                      placeholder="Event Title"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                    />
-                    <textarea
-                      placeholder="Event Description"
-                      rows={3}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                    ></textarea>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <input
-                        type="date"
-                        className="px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                      />
-                      <input
-                        type="text"
-                        placeholder="Location"
-                        className="px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                      />
+                {/* Current Weather */}
+                <div className="bg-white rounded-xl nature-card p-6">
+                  <h5 className="text-lg font-semibold text-stone-900 mb-4">Current Weather - {sampleWeatherData.location}</h5>
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center">
+                      <Sun className="h-12 w-12 text-sunshine-500 mr-4" />
+                      <div>
+                        <div className="text-3xl font-bold text-stone-900">{sampleWeatherData.current.temperature}°F</div>
+                        <div className="text-stone-600">{sampleWeatherData.current.condition}</div>
+                      </div>
                     </div>
-                    <button className="w-full bg-orange-600 text-white py-3 rounded-lg hover:bg-orange-700 transition-colors font-medium">
-                      Create Event
-                    </button>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="flex items-center">
+                      <Wind className="h-5 w-5 text-stone-500 mr-2" />
+                      <span className="text-stone-600">{sampleWeatherData.current.windSpeed} mph</span>
+                    </div>
+                    <div className="flex items-center">
+                      <Thermometer className="h-5 w-5 text-stone-500 mr-2" />
+                      <span className="text-stone-600">{sampleWeatherData.current.humidity}% humidity</span>
+                    </div>
                   </div>
                 </div>
-                
-                <div className="bg-white rounded-2xl shadow-md p-8">
-                  <h4 className="text-xl font-semibold text-gray-900 mb-6">Event Statistics</h4>
-                  <div className="space-y-6">
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-600">Total Events</span>
-                      <span className="text-2xl font-bold text-gray-900">24</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-600">Active Bookings</span>
-                      <span className="text-2xl font-bold text-orange-600">156</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-600">Revenue This Month</span>
-                      <span className="text-2xl font-bold text-green-600">$12,450</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-600">Average Rating</span>
-                      <span className="text-2xl font-bold text-yellow-500">4.8</span>
-                    </div>
+
+                {/* 5-Day Forecast */}
+                <div className="bg-white rounded-xl nature-card p-6">
+                  <h5 className="text-lg font-semibold text-stone-900 mb-4">5-Day Forecast</h5>
+                  <div className="space-y-3">
+                    {sampleWeatherData.forecast.map((day, index) => (
+                      <div key={index} className="flex items-center justify-between py-2 border-b border-stone-100 last:border-b-0">
+                        <div className="flex items-center">
+                          {day.condition === 'Sunny' && <Sun className="h-5 w-5 text-sunshine-500 mr-3" />}
+                          {day.condition === 'Cloudy' && <Cloud className="h-5 w-5 text-stone-500 mr-3" />}
+                          {day.condition === 'Rain' && <CloudRain className="h-5 w-5 text-stone-600 mr-3" />}
+                          {day.condition === 'Partly Cloudy' && <Sun className="h-5 w-5 text-sunshine-400 mr-3" />}
+                          <div>
+                            <div className="font-medium text-stone-900">{new Date(day.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}</div>
+                            <div className="text-sm text-stone-600">{day.condition}</div>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <div className="font-semibold text-stone-900">{day.high}°/{day.low}°</div>
+                          <div className="text-sm text-stone-600">{day.precipitation}% rain</div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
             </div>
           )}
 
-          {/* Transport Providers Content */}
-          {activeTab === 'transport' && (
+          {activeService === 'planning' && (
             <div>
               <div className="text-center mb-12">
-                <h3 className="text-3xl font-bold text-gray-900 mb-4">Transportation Services</h3>
-                <p className="text-gray-600 max-w-2xl mx-auto">
+                <div className="flex items-center justify-center mb-4">
+                  <Route className="h-12 w-12 text-earth-600 mr-4" />
+                  <h3 className="text-3xl font-bold text-stone-900">Travel Planning</h3>
+                </div>
+                <p className="text-stone-600 max-w-2xl mx-auto">
+                  Curated travel plans and itineraries for unforgettable experiences.
+                </p>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {sampleTravelPlans.map((plan) => (
+                  <div key={plan.id} className="bg-white rounded-xl nature-card p-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <h5 className="text-lg font-semibold text-stone-900">{plan.destination}</h5>
+                      <span className={`px-2 py-1 rounded text-xs font-medium ${
+                        plan.difficulty === 'Easy' ? 'bg-forest-100 text-forest-800' :
+                        plan.difficulty === 'Moderate' ? 'bg-sunshine-100 text-sunshine-800' :
+                        'bg-earth-100 text-earth-800'
+                      }`}>
+                        {plan.difficulty}
+                      </span>
+                    </div>
+                    <div className="space-y-3 mb-4">
+                      <div className="flex items-center">
+                        <Clock className="h-4 w-4 text-stone-500 mr-2" />
+                        <span className="text-stone-600">{plan.duration}</span>
+                      </div>
+                      <div className="flex items-center">
+                        <DollarSign className="h-4 w-4 text-stone-500 mr-2" />
+                        <span className="text-stone-600">Budget: ${plan.budget}</span>
+                      </div>
+                      <div className="flex items-center">
+                        <Car className="h-4 w-4 text-stone-500 mr-2" />
+                        <span className="text-stone-600">{plan.transport}</span>
+                      </div>
+                      <div className="flex items-center">
+                        <Calendar className="h-4 w-4 text-stone-500 mr-2" />
+                        <span className="text-stone-600">{plan.bestTime}</span>
+                      </div>
+                    </div>
+                    <div className="mb-4">
+                      <p className="text-sm text-stone-600 mb-2">Activities:</p>
+                      <div className="flex flex-wrap gap-1">
+                        {plan.activities.map((activity, index) => (
+                          <span
+                            key={index}
+                            className="bg-earth-100 text-earth-800 text-xs px-2 py-1 rounded"
+                          >
+                            {activity}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                    <button className="w-full bg-earth-600 text-white py-2 rounded-lg hover:bg-earth-700 transition-colors font-medium organic-btn">
+                      View Full Plan
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {activeService === 'safety' && (
+            <div>
+              <div className="text-center mb-12">
+                <div className="flex items-center justify-center mb-4">
+                  <Shield className="h-12 w-12 text-stone-600 mr-4" />
+                  <h3 className="text-3xl font-bold text-stone-900">Safety & Security Information</h3>
+                </div>
+                <p className="text-stone-600 max-w-2xl mx-auto">
+                  Stay informed and safe with real-time security updates and emergency information.
+                </p>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {sampleSafetyInfo.map((info) => (
+                  <div key={info.id} className="bg-white rounded-xl nature-card p-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <h5 className="text-lg font-semibold text-stone-900">{info.location}</h5>
+                      <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                        info.riskLevel === 'Low' ? 'bg-forest-100 text-forest-800' :
+                        info.riskLevel === 'Medium' ? 'bg-sunshine-100 text-sunshine-800' :
+                        'bg-earth-100 text-earth-800'
+                      }`}>
+                        {info.riskLevel} Risk
+                      </span>
+                    </div>
+                    
+                    {/* Emergency Contacts */}
+                    <div className="mb-4">
+                      <h6 className="font-medium text-stone-900 mb-2">Emergency Contacts</h6>
+                      <div className="space-y-1 text-sm">
+                        <div className="flex justify-between">
+                          <span className="text-stone-600">Police:</span>
+                          <span className="font-medium">{info.emergencyContacts.police}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-stone-600">Medical:</span>
+                          <span className="font-medium">{info.emergencyContacts.medical}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-stone-600">Tourist Help:</span>
+                          <span className="font-medium">{info.emergencyContacts.tourist}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Current Alerts */}
+                    {info.alerts.length > 0 && (
+                      <div className="mb-4">
+                        <h6 className="font-medium text-stone-900 mb-2">Current Alerts</h6>
+                        <div className="space-y-2">
+                          {info.alerts.map((alert, index) => (
+                            <div key={index} className="flex items-start">
+                              <AlertTriangle className="h-4 w-4 text-sunshine-500 mr-2 mt-0.5 flex-shrink-0" />
+                              <span className="text-sm text-stone-600">{alert}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Recommendations */}
+                    <div className="mb-4">
+                      <h6 className="font-medium text-stone-900 mb-2">Safety Recommendations</h6>
+                      <div className="space-y-1">
+                        {info.recommendations.map((rec, index) => (
+                          <div key={index} className="flex items-start">
+                            <CheckCircle className="h-4 w-4 text-forest-500 mr-2 mt-0.5 flex-shrink-0" />
+                            <span className="text-sm text-stone-600">{rec}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="text-xs text-stone-500 pt-2 border-t border-stone-200">
+                      Last updated: {new Date(info.lastUpdated).toLocaleDateString()}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {activeService === 'misc' && (
+            <div>
+              <div className="text-center mb-12">
+                <div className="flex items-center justify-center mb-4">
+                  <MoreHorizontal className="h-12 w-12 text-forest-600 mr-4" />
+                  <h3 className="text-3xl font-bold text-stone-900">Miscellaneous Services</h3>
+                </div>
+                <p className="text-stone-600 max-w-2xl mx-auto">
+                  Additional tools and services to enhance your travel experience.
+                </p>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {/* Currency Exchange */}
+                <div className="bg-white rounded-xl nature-card p-6 text-center">
+                  <Banknote className="h-12 w-12 text-forest-600 mx-auto mb-4" />
+                  <h5 className="text-lg font-semibold text-stone-900 mb-2">Currency Exchange</h5>
+                  <p className="text-stone-600 text-sm mb-4">Real-time exchange rates and currency conversion</p>
+                  <button className="w-full bg-forest-600 text-white py-2 rounded-lg hover:bg-forest-700 transition-colors organic-btn">
+                    Check Rates
+                  </button>
+                </div>
+
+                {/* Travel Insurance */}
+                <div className="bg-white rounded-xl nature-card p-6 text-center">
+                  <Shield className="h-12 w-12 text-earth-600 mx-auto mb-4" />
+                  <h5 className="text-lg font-semibold text-stone-900 mb-2">Travel Insurance</h5>
+                  <p className="text-stone-600 text-sm mb-4">Comprehensive coverage for your trips</p>
+                  <button className="w-full bg-earth-600 text-white py-2 rounded-lg hover:bg-earth-700 transition-colors organic-btn">
+                    Get Quote
+                  </button>
+                </div>
+
+                {/* Language Translation */}
+                <div className="bg-white rounded-xl nature-card p-6 text-center">
+                  <Globe className="h-12 w-12 text-sunshine-600 mx-auto mb-4" />
+                  <h5 className="text-lg font-semibold text-stone-900 mb-2">Translation Services</h5>
+                  <p className="text-stone-600 text-sm mb-4">Real-time translation and language guides</p>
+                  <button className="w-full bg-sunshine-600 text-white py-2 rounded-lg hover:bg-sunshine-700 transition-colors organic-btn">
+                    Translate
+                  </button>
+                </div>
+
+                {/* Emergency Assistance */}
+                <div className="bg-white rounded-xl nature-card p-6 text-center">
+                  <Phone className="h-12 w-12 text-stone-600 mx-auto mb-4" />
+                  <h5 className="text-lg font-semibold text-stone-900 mb-2">24/7 Support</h5>
+                  <p className="text-stone-600 text-sm mb-4">Round-the-clock emergency assistance</p>
+                  <button className="w-full bg-stone-600 text-white py-2 rounded-lg hover:bg-stone-700 transition-colors organic-btn">
+                    Contact Support
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Main Stakeholder Content - Only show when no service is selected */}
+          {!activeService && activeTab === 'seeker' && (
+            <div>
+              <div className="text-center mb-12">
+                <h3 className="text-3xl font-bold text-stone-900 mb-4">Discover Amazing Events</h3>
+                <p className="text-stone-600 max-w-2xl mx-auto">
+                  Find the perfect experience for your next adventure. From outdoor activities to cultural events.
+                </p>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {sampleEvents.map((event) => (
+                  <div key={event.id} className="bg-white rounded-2xl nature-card overflow-hidden group relative">
+                    <div className="relative">
+                      <img
+                        src={event.image}
+                        alt={event.title}
+                        className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                      
+                      {/* Enhanced Price Badge */}
+                      <div className="absolute top-4 right-4 bg-gradient-to-r from-sunshine-400 to-sunshine-500 text-white px-3 py-1 rounded-full shadow-lg">
+                        <span className="text-sm font-bold">${event.price}</span>
+                      </div>
+
+                      {/* Live Badge for trending events */}
+                      {event.id === '1' && (
+                        <div className="absolute top-4 left-4 bg-gradient-to-r from-red-500 to-red-600 text-white px-3 py-1 rounded-full shadow-lg flex items-center space-x-1">
+                          <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                          <span className="text-xs font-bold">TRENDING</span>
+                        </div>
+                      )}
+
+                      {/* Action Buttons Overlay */}
+                      <div className="absolute top-4 left-4 flex flex-col space-y-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <button 
+                          onClick={() => toggleFavorite(event.id, favorites, setFavorites)}
+                          className={`p-2 rounded-full backdrop-blur-sm transition-all ${
+                            favorites.includes(event.id) 
+                              ? 'bg-red-500 text-white' 
+                              : 'bg-white/80 text-stone-600 hover:bg-red-500 hover:text-white'
+                          }`}
+                        >
+                          <Heart className="h-4 w-4" />
+                        </button>
+                        <button className="p-2 rounded-full bg-white/80 backdrop-blur-sm text-stone-600 hover:bg-forest-500 hover:text-white transition-all">
+                          <Share2 className="h-4 w-4" />
+                        </button>
+                        <button className="p-2 rounded-full bg-white/80 backdrop-blur-sm text-stone-600 hover:bg-earth-500 hover:text-white transition-all">
+                          <Bookmark className="h-4 w-4" />
+                        </button>
+                      </div>
+
+                      {/* Quick View Button */}
+                      <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <button className="p-2 rounded-full bg-white/90 backdrop-blur-sm text-stone-600 hover:bg-forest-500 hover:text-white transition-all">
+                          <Eye className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </div>
+                    
+                    <div className="p-6">
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center space-x-2">
+                          <span className="bg-forest-100 text-forest-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
+                            {event.category}
+                          </span>
+                          {event.id === '2' && (
+                            <span className="bg-sunshine-100 text-sunshine-800 text-xs font-medium px-2.5 py-0.5 rounded-full flex items-center space-x-1">
+                              <Gift className="h-3 w-3" />
+                              <span>Early Bird</span>
+                            </span>
+                          )}
+                        </div>
+                        <div className="flex items-center space-x-1">
+                          <Star className="h-4 w-4 text-sunshine-500 fill-current" />
+                          <span className="text-sm font-medium text-stone-700">{event.rating}</span>
+                          <span className="text-xs text-stone-500">({Math.floor(Math.random() * 50) + 10})</span>
+                        </div>
+                      </div>
+
+                      <h4 className="text-lg font-semibold text-stone-900 mb-3 group-hover:text-forest-700 transition-colors">
+                        {event.title}
+                      </h4>
+
+                      <div className="space-y-2 mb-4">
+                        <div className="flex items-center text-sm text-stone-600">
+                          <MapPin className="h-4 w-4 mr-2 text-earth-500" />
+                          {event.location}
+                        </div>
+                        <div className="flex items-center text-sm text-stone-600">
+                          <Clock className="h-4 w-4 mr-2 text-earth-500" />
+                          {new Date(event.date).toLocaleDateString()} • 2:00 PM
+                        </div>
+                        <div className="flex items-center text-sm text-stone-600">
+                          <Users className="h-4 w-4 mr-2 text-earth-500" />
+                          {event.attendees} going • {Math.floor(Math.random() * 20) + 5} spots left
+                        </div>
+                      </div>
+
+                      {/* Social Proof */}
+                      <div className="flex items-center space-x-4 mb-4 text-xs text-stone-500">
+                        <div className="flex items-center space-x-1">
+                          <ThumbsUp className="h-3 w-3" />
+                          <span>{Math.floor(Math.random() * 100) + 50} likes</span>
+                        </div>
+                        <div className="flex items-center space-x-1">
+                          <MessageCircle className="h-3 w-3" />
+                          <span>{Math.floor(Math.random() * 20) + 5} comments</span>
+                        </div>
+                        <div className="flex items-center space-x-1">
+                          <Eye className="h-3 w-3" />
+                          <span>{Math.floor(Math.random() * 500) + 100} views</span>
+                        </div>
+                      </div>
+
+                      {/* Enhanced Action Buttons */}
+                      <div className="flex space-x-2">
+                        <button 
+                          onClick={() => {
+                            setSelectedEvent(event);
+                            setShowBookingModal(true);
+                            setBookingStep('event');
+                          }}
+                          className="flex-1 bg-forest-600 text-white py-2.5 px-4 rounded-lg hover:bg-forest-700 transition-all organic-btn font-medium flex items-center justify-center space-x-2"
+                        >
+                          <Zap className="h-4 w-4" />
+                          <span>Book Package</span>
+                        </button>
+                        <button className="px-4 py-2.5 border border-earth-300 text-earth-600 rounded-lg hover:bg-earth-50 transition-colors">
+                          <MessageCircle className="h-4 w-4" />
+                        </button>
+                      </div>
+
+                      {/* Organizer Info */}
+                      <div className="mt-4 pt-4 border-t border-stone-100">
+                        <div className="flex items-center space-x-2">
+                          <div className="w-6 h-6 bg-earth-100 rounded-full flex items-center justify-center">
+                            <span className="text-xs">🏢</span>
+                          </div>
+                          <span className="text-sm text-stone-600">by {event.organizer}</span>
+                          <div className="flex items-center space-x-1">
+                            <CheckCircle className="h-3 w-3 text-forest-500" />
+                            <span className="text-xs text-forest-600">Verified</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {!activeService && activeTab === 'organizer' && (
+            <div>
+              <div className="text-center mb-8">
+                <h3 className="text-3xl font-bold text-stone-900 mb-4">Event Organizer Dashboard</h3>
+                <p className="text-stone-600 max-w-2xl mx-auto">
+                  Manage your events, venues, and bookings with our comprehensive organizer tools.
+                </p>
+              </div>
+
+              {/* Navigation Tabs */}
+              <div className="flex justify-center mb-8">
+                <div className="bg-white rounded-xl p-1 shadow-md">
+                  <button
+                    onClick={() => setOrganizerView('dashboard')}
+                    className={`px-6 py-3 rounded-lg font-medium transition-all ${
+                      organizerView === 'dashboard'
+                        ? 'bg-earth-600 text-white shadow-md'
+                        : 'text-stone-600 hover:bg-earth-50'
+                    }`}
+                  >
+                    Dashboard
+                  </button>
+                  <button
+                    onClick={() => setOrganizerView('venues')}
+                    className={`px-6 py-3 rounded-lg font-medium transition-all ${
+                      organizerView === 'venues'
+                        ? 'bg-earth-600 text-white shadow-md'
+                        : 'text-stone-600 hover:bg-earth-50'
+                    }`}
+                  >
+                    Venues
+                  </button>
+                  <button
+                    onClick={() => setOrganizerView('create')}
+                    className={`px-6 py-3 rounded-lg font-medium transition-all ${
+                      organizerView === 'create'
+                        ? 'bg-earth-600 text-white shadow-md'
+                        : 'text-stone-600 hover:bg-earth-50'
+                    }`}
+                  >
+                    Create Event
+                  </button>
+                </div>
+              </div>
+
+              {/* Dashboard View */}
+              {organizerView === 'dashboard' && (
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                  <div className="bg-white rounded-2xl nature-card p-8">
+                    <h4 className="text-xl font-semibold text-stone-900 mb-6">Event Statistics</h4>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <span className="text-stone-600">Total Events</span>
+                        <span className="text-2xl font-bold text-stone-900">24</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-stone-600">Active Bookings</span>
+                        <span className="text-2xl font-bold text-earth-600">156</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-stone-600">Revenue This Month</span>
+                        <span className="text-2xl font-bold text-forest-600">$12,450</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-stone-600">Average Rating</span>
+                        <span className="text-2xl font-bold text-sunshine-600">4.8</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-white rounded-2xl nature-card p-8">
+                    <h4 className="text-xl font-semibold text-stone-900 mb-6">Venue Overview</h4>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <span className="text-stone-600">Total Venues</span>
+                        <span className="text-2xl font-bold text-stone-900">8</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-stone-600">Available Today</span>
+                        <span className="text-2xl font-bold text-forest-600">5</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-stone-600">Booked This Week</span>
+                        <span className="text-2xl font-bold text-earth-600">12</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-stone-600">Maintenance</span>
+                        <span className="text-2xl font-bold text-sunshine-600">1</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-white rounded-2xl nature-card p-8">
+                    <h4 className="text-xl font-semibold text-stone-900 mb-6">Quick Actions</h4>
+                    <div className="space-y-3">
+                      <button 
+                        onClick={() => setOrganizerView('create')}
+                        className="w-full bg-earth-600 text-white py-3 rounded-lg hover:bg-earth-700 transition-colors font-medium organic-btn"
+                      >
+                        Create New Event
+                      </button>
+                      <button 
+                        onClick={() => setOrganizerView('venues')}
+                        className="w-full bg-forest-600 text-white py-3 rounded-lg hover:bg-forest-700 transition-colors font-medium organic-btn"
+                      >
+                        Manage Venues
+                      </button>
+                      <button className="w-full bg-stone-600 text-white py-3 rounded-lg hover:bg-stone-700 transition-colors font-medium organic-btn">
+                        View Reports
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Venues View */}
+              {organizerView === 'venues' && (
+                <div>
+                  {/* Venue Category Filter */}
+                  <div className="mb-8">
+                    <div className="flex flex-wrap gap-3 justify-center">
+                      {['all', 'Conference Hall', 'Outdoor Venue', 'Art Gallery', 'Restaurant', 'Theater'].map((category) => (
+                        <button
+                          key={category}
+                          onClick={() => setSelectedVenueCategory(category)}
+                          className={`px-4 py-2 rounded-full font-medium transition-all ${
+                            selectedVenueCategory === category
+                              ? 'bg-earth-600 text-white shadow-md'
+                              : 'bg-white text-stone-600 hover:bg-earth-50 border border-stone-300'
+                          }`}
+                        >
+                          {category === 'all' ? 'All Categories' : category}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Venues Grid */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {sampleVenues
+                      .filter(venue => selectedVenueCategory === 'all' || venue.category === selectedVenueCategory)
+                      .map((venue) => (
+                      <div key={venue.id} className="bg-white rounded-2xl nature-card overflow-hidden">
+                        <div className="relative">
+                          <img
+                            src={venue.image}
+                            alt={venue.name}
+                            className="w-full h-48 object-cover"
+                          />
+                          <div className="absolute top-4 right-4 bg-earth-100/90 backdrop-blur-sm px-3 py-1 rounded-full border border-earth-200">
+                            <span className="text-sm font-semibold text-stone-900">${venue.pricePerDay}/day</span>
+                          </div>
+                        </div>
+                        <div className="p-6">
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="bg-earth-100 text-earth-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
+                              {venue.category}
+                            </span>
+                            <div className="flex items-center">
+                              <Star className="h-4 w-4 text-sunshine-500 fill-current" />
+                              <span className="text-sm text-stone-600 ml-1">{venue.rating}</span>
+                            </div>
+                          </div>
+                          <h4 className="text-lg font-semibold text-stone-900 mb-2">{venue.name}</h4>
+                          <div className="flex items-center text-sm text-stone-600 mb-2">
+                            <MapPin className="h-4 w-4 mr-1" />
+                            {venue.location}
+                          </div>
+                          <div className="flex items-center text-sm text-stone-600 mb-4">
+                            <Users className="h-4 w-4 mr-1" />
+                            Capacity: {venue.capacity} people
+                          </div>
+                          
+                          {/* Availability Calendar */}
+                          <div className="mb-4">
+                            <h5 className="text-sm font-medium text-stone-900 mb-2">Next 5 Days</h5>
+                            <div className="flex gap-1">
+                              {venue.availability.map((day, index) => (
+                                <div
+                                  key={index}
+                                  className={`flex-1 h-8 rounded text-xs flex items-center justify-center font-medium ${
+                                    day.status === 'available'
+                                      ? 'bg-forest-100 text-forest-800'
+                                      : day.status === 'booked'
+                                      ? 'bg-earth-100 text-earth-800'
+                                      : 'bg-stone-100 text-stone-800'
+                                  }`}
+                                >
+                                  {new Date(day.date).getDate()}
+                                </div>
+                              ))}
+                            </div>
+                            <div className="flex gap-4 text-xs text-stone-600 mt-2">
+                              <span className="flex items-center">
+                                <div className="w-3 h-3 bg-forest-100 rounded mr-1"></div>
+                                Available
+                              </span>
+                              <span className="flex items-center">
+                                <div className="w-3 h-3 bg-earth-100 rounded mr-1"></div>
+                                Booked
+                              </span>
+                              <span className="flex items-center">
+                                <div className="w-3 h-3 bg-stone-100 rounded mr-1"></div>
+                                Maintenance
+                              </span>
+                            </div>
+                          </div>
+
+                          {/* Amenities */}
+                          <div className="mb-4">
+                            <h5 className="text-sm font-medium text-stone-900 mb-2">Amenities</h5>
+                            <div className="flex flex-wrap gap-1">
+                              {venue.amenities.slice(0, 3).map((amenity, index) => (
+                                <span
+                                  key={index}
+                                  className="bg-stone-100 text-stone-700 text-xs px-2 py-1 rounded"
+                                >
+                                  {amenity}
+                                </span>
+                              ))}
+                              {venue.amenities.length > 3 && (
+                                <span className="bg-stone-100 text-stone-700 text-xs px-2 py-1 rounded">
+                                  +{venue.amenities.length - 3} more
+                                </span>
+                              )}
+                            </div>
+                          </div>
+
+                          <button className="w-full bg-earth-600 text-white py-2 rounded-lg hover:bg-earth-700 transition-colors font-medium organic-btn">
+                            Manage Venue
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Create Event View */}
+              {organizerView === 'create' && (
+                <div className="max-w-4xl mx-auto">
+                  <div className="bg-white rounded-2xl nature-card p-8">
+                    <h4 className="text-2xl font-semibold text-stone-900 mb-8">Create New Event</h4>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                      <div className="space-y-6">
+                        <div>
+                          <label className="block text-sm font-medium text-stone-700 mb-2">Event Title</label>
+                          <input
+                            type="text"
+                            placeholder="Enter event title"
+                            className="w-full px-4 py-3 border border-earth-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-earth-500 focus:border-transparent"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-stone-700 mb-2">Event Description</label>
+                          <textarea
+                            placeholder="Describe your event"
+                            rows={4}
+                            className="w-full px-4 py-3 border border-earth-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-earth-500 focus:border-transparent"
+                          ></textarea>
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium text-stone-700 mb-2">Event Date</label>
+                            <input
+                              type="date"
+                              className="w-full px-4 py-3 border border-earth-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-earth-500 focus:border-transparent"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-stone-700 mb-2">Event Time</label>
+                            <input
+                              type="time"
+                              className="w-full px-4 py-3 border border-earth-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-earth-500 focus:border-transparent"
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-stone-700 mb-2">Select Venue</label>
+                          <select className="w-full px-4 py-3 border border-earth-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-earth-500 focus:border-transparent">
+                            <option value="">Choose a venue</option>
+                            {sampleVenues.map((venue) => (
+                              <option key={venue.id} value={venue.id}>
+                                {venue.name} - ${venue.pricePerDay}/day
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+                      <div className="space-y-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium text-stone-700 mb-2">Ticket Price</label>
+                            <input
+                              type="number"
+                              placeholder="0"
+                              className="w-full px-4 py-3 border border-earth-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-earth-500 focus:border-transparent"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-stone-700 mb-2">Max Attendees</label>
+                            <input
+                              type="number"
+                              placeholder="100"
+                              className="w-full px-4 py-3 border border-earth-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-earth-500 focus:border-transparent"
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-stone-700 mb-2">Event Category</label>
+                          <select className="w-full px-4 py-3 border border-earth-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-earth-500 focus:border-transparent">
+                            <option value="">Select category</option>
+                            <option value="adventure">Adventure</option>
+                            <option value="culinary">Culinary</option>
+                            <option value="education">Education</option>
+                            <option value="entertainment">Entertainment</option>
+                            <option value="sports">Sports</option>
+                            <option value="culture">Culture</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-stone-700 mb-2">Event Image</label>
+                          <div className="border-2 border-dashed border-earth-300 rounded-lg p-6 text-center">
+                            <Camera className="h-12 w-12 text-stone-400 mx-auto mb-4" />
+                            <p className="text-stone-600">Click to upload event image</p>
+                          </div>
+                        </div>
+                        <button className="w-full bg-earth-600 text-white py-3 rounded-lg hover:bg-earth-700 transition-colors font-medium organic-btn">
+                          Create Event
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {!activeService && activeTab === 'transport' && (
+            <div>
+              <div className="text-center mb-12">
+                <h3 className="text-3xl font-bold text-stone-900 mb-4">Transportation Services</h3>
+                <p className="text-stone-600 max-w-2xl mx-auto">
                   Find reliable transportation options or offer your transport services to event attendees.
                 </p>
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {sampleTransport.map((transport) => (
-                  <div key={transport.id} className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300 p-6">
+                  <div key={transport.id} className="bg-white rounded-2xl nature-card p-6">
                     <div className="flex items-center justify-between mb-4">
-                      <h4 className="text-lg font-semibold text-gray-900">{transport.provider}</h4>
+                      <h4 className="text-lg font-semibold text-stone-900">{transport.provider}</h4>
                       <div className="flex items-center">
-                        <Star className="h-4 w-4 text-yellow-400 fill-current" />
-                        <span className="text-sm text-gray-600 ml-1">{transport.rating}</span>
+                        <Star className="h-4 w-4 text-sunshine-500 fill-current" />
+                        <span className="text-sm text-stone-600 ml-1">{transport.rating}</span>
                       </div>
                     </div>
                     <div className="space-y-3">
                       <div className="flex items-center">
-                        <Truck className="h-5 w-5 text-green-600 mr-3" />
-                        <span className="text-gray-700">{transport.type}</span>
+                        <Truck className="h-5 w-5 text-sunshine-600 mr-3" />
+                        <span className="text-stone-700">{transport.type}</span>
                       </div>
                       <div className="flex items-center">
-                        <MapPin className="h-5 w-5 text-green-600 mr-3" />
-                        <span className="text-gray-700">{transport.route}</span>
+                        <MapPin className="h-5 w-5 text-sunshine-600 mr-3" />
+                        <span className="text-stone-700">{transport.route}</span>
                       </div>
                       <div className="flex items-center">
-                        <Clock className="h-5 w-5 text-green-600 mr-3" />
-                        <span className="text-gray-700">{transport.availability}</span>
+                        <Clock className="h-5 w-5 text-sunshine-600 mr-3" />
+                        <span className="text-stone-700">{transport.availability}</span>
                       </div>
                     </div>
                     <div className="flex items-center justify-between mt-6">
-                      <span className="text-2xl font-bold text-gray-900">${transport.price}</span>
-                      <button className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+                      <span className="text-2xl font-bold text-stone-900">${transport.price}</span>
+                      <button className="bg-sunshine-600 text-white px-4 py-2 rounded-lg hover:bg-sunshine-700 transition-colors organic-btn">
                         Book Transport
                       </button>
                     </div>
@@ -452,42 +2137,41 @@ function App() {
             </div>
           )}
 
-          {/* Equipment Rentals Content */}
-          {activeTab === 'equipment' && (
+          {!activeService && activeTab === 'equipment' && (
             <div>
               <div className="text-center mb-12">
-                <h3 className="text-3xl font-bold text-gray-900 mb-4">Equipment Rentals</h3>
-                <p className="text-gray-600 max-w-2xl mx-auto">
+                <h3 className="text-3xl font-bold text-stone-900 mb-4">Equipment Rentals</h3>
+                <p className="text-stone-600 max-w-2xl mx-auto">
                   Rent high-quality equipment for your adventures or list your equipment for rental income.
                 </p>
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {sampleEquipment.map((equipment) => (
-                  <div key={equipment.id} className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden group">
+                  <div key={equipment.id} className="bg-white rounded-2xl nature-card overflow-hidden group">
                     <div className="relative">
                       <img
                         src={equipment.image}
                         alt={equipment.name}
                         className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                       />
-                      <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full">
-                        <span className="text-sm font-semibold text-gray-900">${equipment.price}/day</span>
+                      <div className="absolute top-4 right-4 bg-stone-100/90 backdrop-blur-sm px-3 py-1 rounded-full border border-stone-200">
+                        <span className="text-sm font-semibold text-stone-900">${equipment.price}/day</span>
                       </div>
                     </div>
                     <div className="p-6">
                       <div className="flex items-center justify-between mb-2">
-                        <span className="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
+                        <span className="bg-stone-100 text-stone-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
                           {equipment.category}
                         </span>
                         <div className="flex items-center">
-                          <Star className="h-4 w-4 text-yellow-400 fill-current" />
-                          <span className="text-sm text-gray-600 ml-1">{equipment.rating}</span>
+                          <Star className="h-4 w-4 text-sunshine-500 fill-current" />
+                          <span className="text-sm text-stone-600 ml-1">{equipment.rating}</span>
                         </div>
                       </div>
-                      <h4 className="text-lg font-semibold text-gray-900 mb-2">{equipment.name}</h4>
-                      <p className="text-gray-600 text-sm mb-4">Provided by {equipment.provider}</p>
-                      <button className="w-full bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition-colors font-medium">
+                      <h4 className="text-lg font-semibold text-stone-900 mb-2">{equipment.name}</h4>
+                      <p className="text-stone-600 text-sm mb-4">Provided by {equipment.provider}</p>
+                      <button className="w-full bg-stone-600 text-white py-2 rounded-lg hover:bg-stone-700 transition-colors font-medium organic-btn">
                         Rent Equipment
                       </button>
                     </div>
@@ -499,22 +2183,352 @@ function App() {
         </div>
       </section>
 
+      {/* Integrated Booking Modal */}
+      {showBookingModal && selectedEvent && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            {/* Modal Header */}
+            <div className="sticky top-0 bg-white border-b border-stone-200 p-6 flex items-center justify-between">
+              <div>
+                <h3 className="text-2xl font-bold text-stone-900">Complete Your Booking</h3>
+                <p className="text-stone-600">{selectedEvent.title}</p>
+              </div>
+              <button 
+                onClick={() => {
+                  setShowBookingModal(false);
+                  setSelectedEvent(null);
+                  setSelectedTransport(null);
+                  setSelectedEquipment([]);
+                  setBookingStep('event');
+                }}
+                className="p-2 hover:bg-stone-100 rounded-full transition-colors"
+              >
+                <X className="h-6 w-6 text-stone-600" />
+              </button>
+            </div>
+
+            {/* Booking Steps */}
+            <div className="p-6">
+              {/* Step Indicator */}
+              <div className="flex items-center justify-center mb-8">
+                <div className="flex items-center space-x-4">
+                  {['event', 'transport', 'equipment', 'summary'].map((step, index) => (
+                    <div key={step} className="flex items-center">
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
+                        bookingStep === step 
+                          ? 'bg-forest-600 text-white' 
+                          : index < ['event', 'transport', 'equipment', 'summary'].indexOf(bookingStep)
+                          ? 'bg-forest-100 text-forest-800'
+                          : 'bg-stone-200 text-stone-600'
+                      }`}>
+                        {index + 1}
+                      </div>
+                      <span className={`ml-2 text-sm font-medium ${
+                        bookingStep === step ? 'text-forest-600' : 'text-stone-600'
+                      }`}>
+                        {step === 'event' && 'Event'}
+                        {step === 'transport' && 'Transport'}
+                        {step === 'equipment' && 'Equipment'}
+                        {step === 'summary' && 'Summary'}
+                      </span>
+                      {index < 3 && <div className="w-8 h-0.5 bg-stone-200 mx-4"></div>}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Step Content */}
+              {bookingStep === 'event' && (
+                <div>
+                  <h4 className="text-xl font-semibold text-stone-900 mb-6">Event Details</h4>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div>
+                      <img 
+                        src={selectedEvent.image} 
+                        alt={selectedEvent.title}
+                        className="w-full h-48 object-cover rounded-xl"
+                      />
+                    </div>
+                    <div className="space-y-4">
+                      <div>
+                        <h5 className="font-semibold text-stone-900">{selectedEvent.title}</h5>
+                        <p className="text-stone-600">{selectedEvent.category}</p>
+                      </div>
+                      <div className="space-y-2">
+                        <div className="flex items-center text-sm">
+                          <MapPin className="h-4 w-4 mr-2 text-earth-500" />
+                          <span>{selectedEvent.location}</span>
+                        </div>
+                        <div className="flex items-center text-sm">
+                          <Clock className="h-4 w-4 mr-2 text-earth-500" />
+                          <span>{new Date(selectedEvent.date).toLocaleDateString()} • {selectedEvent.duration}</span>
+                        </div>
+                        <div className="flex items-center text-sm">
+                          <Users className="h-4 w-4 mr-2 text-earth-500" />
+                          <span>{selectedEvent.attendees} attendees</span>
+                        </div>
+                        {selectedEvent.difficulty && (
+                          <div className="flex items-center text-sm">
+                            <Mountain className="h-4 w-4 mr-2 text-earth-500" />
+                            <span>Difficulty: {selectedEvent.difficulty}</span>
+                          </div>
+                        )}
+                      </div>
+                      <div className="bg-forest-50 p-4 rounded-lg">
+                        <div className="flex justify-between items-center">
+                          <span className="font-medium text-stone-900">Event Price:</span>
+                          <span className="text-2xl font-bold text-forest-600">${selectedEvent.price}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex justify-end mt-6">
+                    <button 
+                      onClick={() => setBookingStep('transport')}
+                      className="bg-forest-600 text-white px-6 py-3 rounded-lg hover:bg-forest-700 transition-colors organic-btn"
+                    >
+                      Add Transport
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {bookingStep === 'transport' && (
+                <div>
+                  <h4 className="text-xl font-semibold text-stone-900 mb-6">Choose Transportation</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    {sampleTransport
+                      .filter(transport => selectedEvent.recommendedTransport?.includes(transport.id))
+                      .map((transport) => (
+                      <div 
+                        key={transport.id} 
+                        className={`p-4 border-2 rounded-xl cursor-pointer transition-all ${
+                          selectedTransport?.id === transport.id 
+                            ? 'border-forest-500 bg-forest-50' 
+                            : 'border-stone-200 hover:border-stone-300'
+                        }`}
+                        onClick={() => setSelectedTransport(transport)}
+                      >
+                        <div className="flex items-center justify-between mb-2">
+                          <h5 className="font-semibold text-stone-900">{transport.provider}</h5>
+                          <div className="flex items-center">
+                            <Star className="h-4 w-4 text-sunshine-500 fill-current" />
+                            <span className="text-sm ml-1">{transport.rating}</span>
+                          </div>
+                        </div>
+                        <div className="space-y-1 text-sm text-stone-600">
+                          <div className="flex items-center">
+                            <Truck className="h-4 w-4 mr-2" />
+                            <span>{transport.type}</span>
+                          </div>
+                          <div className="flex items-center">
+                            <MapPin className="h-4 w-4 mr-2" />
+                            <span>{transport.route}</span>
+                          </div>
+                          <div className="flex items-center">
+                            <Clock className="h-4 w-4 mr-2" />
+                            <span>{transport.availability}</span>
+                          </div>
+                        </div>
+                        <div className="flex justify-between items-center mt-3">
+                          <span className="text-lg font-bold text-stone-900">${transport.price}</span>
+                          {selectedTransport?.id === transport.id && (
+                            <CheckCircle className="h-5 w-5 text-forest-600" />
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="flex justify-between">
+                    <button 
+                      onClick={() => setBookingStep('event')}
+                      className="px-6 py-3 border border-stone-300 text-stone-600 rounded-lg hover:bg-stone-50 transition-colors"
+                    >
+                      Back
+                    </button>
+                    <div className="space-x-3">
+                      <button 
+                        onClick={() => setBookingStep('equipment')}
+                        className="px-6 py-3 border border-stone-300 text-stone-600 rounded-lg hover:bg-stone-50 transition-colors"
+                      >
+                        Skip Transport
+                      </button>
+                      <button 
+                        onClick={() => setBookingStep('equipment')}
+                        disabled={!selectedTransport}
+                        className="bg-forest-600 text-white px-6 py-3 rounded-lg hover:bg-forest-700 transition-colors organic-btn disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        Add Equipment
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {bookingStep === 'equipment' && (
+                <div>
+                  <h4 className="text-xl font-semibold text-stone-900 mb-6">Choose Equipment</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+                    {sampleEquipment
+                      .filter(equipment => selectedEvent.recommendedEquipment?.includes(equipment.id))
+                      .map((equipment) => (
+                      <div 
+                        key={equipment.id} 
+                        className={`p-4 border-2 rounded-xl cursor-pointer transition-all ${
+                          selectedEquipment.some(eq => eq.id === equipment.id)
+                            ? 'border-forest-500 bg-forest-50' 
+                            : 'border-stone-200 hover:border-stone-300'
+                        }`}
+                        onClick={() => {
+                          if (selectedEquipment.some(eq => eq.id === equipment.id)) {
+                            setSelectedEquipment(selectedEquipment.filter(eq => eq.id !== equipment.id));
+                          } else {
+                            setSelectedEquipment([...selectedEquipment, equipment]);
+                          }
+                        }}
+                      >
+                        <img 
+                          src={equipment.image} 
+                          alt={equipment.name}
+                          className="w-full h-32 object-cover rounded-lg mb-3"
+                        />
+                        <div className="flex items-center justify-between mb-2">
+                          <h5 className="font-semibold text-stone-900 text-sm">{equipment.name}</h5>
+                          <div className="flex items-center">
+                            <Star className="h-3 w-3 text-sunshine-500 fill-current" />
+                            <span className="text-xs ml-1">{equipment.rating}</span>
+                          </div>
+                        </div>
+                        <p className="text-xs text-stone-600 mb-2">{equipment.category}</p>
+                        <div className="flex justify-between items-center">
+                          <span className="font-bold text-stone-900">${equipment.price}/day</span>
+                          {selectedEquipment.some(eq => eq.id === equipment.id) && (
+                            <CheckCircle className="h-4 w-4 text-forest-600" />
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="flex justify-between">
+                    <button 
+                      onClick={() => setBookingStep('transport')}
+                      className="px-6 py-3 border border-stone-300 text-stone-600 rounded-lg hover:bg-stone-50 transition-colors"
+                    >
+                      Back
+                    </button>
+                    <div className="space-x-3">
+                      <button 
+                        onClick={() => setBookingStep('summary')}
+                        className="px-6 py-3 border border-stone-300 text-stone-600 rounded-lg hover:bg-stone-50 transition-colors"
+                      >
+                        Skip Equipment
+                      </button>
+                      <button 
+                        onClick={() => setBookingStep('summary')}
+                        className="bg-forest-600 text-white px-6 py-3 rounded-lg hover:bg-forest-700 transition-colors organic-btn"
+                      >
+                        Review Booking
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {bookingStep === 'summary' && (
+                <div>
+                  <h4 className="text-xl font-semibold text-stone-900 mb-6">Booking Summary</h4>
+                  <div className="space-y-6">
+                    {/* Event Summary */}
+                    <div className="bg-stone-50 p-4 rounded-xl">
+                      <h5 className="font-semibold text-stone-900 mb-2">Event</h5>
+                      <div className="flex justify-between items-center">
+                        <span>{selectedEvent.title}</span>
+                        <span className="font-bold">${selectedEvent.price}</span>
+                      </div>
+                    </div>
+
+                    {/* Transport Summary */}
+                    {selectedTransport && (
+                      <div className="bg-stone-50 p-4 rounded-xl">
+                        <h5 className="font-semibold text-stone-900 mb-2">Transportation</h5>
+                        <div className="flex justify-between items-center">
+                          <span>{selectedTransport.provider} - {selectedTransport.type}</span>
+                          <span className="font-bold">${selectedTransport.price}</span>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Equipment Summary */}
+                    {selectedEquipment.length > 0 && (
+                      <div className="bg-stone-50 p-4 rounded-xl">
+                        <h5 className="font-semibold text-stone-900 mb-2">Equipment</h5>
+                        {selectedEquipment.map((equipment) => (
+                          <div key={equipment.id} className="flex justify-between items-center mb-1">
+                            <span>{equipment.name}</span>
+                            <span className="font-bold">${equipment.price}/day</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Total */}
+                    <div className="bg-forest-50 p-4 rounded-xl border-2 border-forest-200">
+                      <div className="flex justify-between items-center">
+                        <span className="text-lg font-semibold text-stone-900">Total Package Price:</span>
+                        <span className="text-2xl font-bold text-forest-600">
+                          ${selectedEvent.price + 
+                            (selectedTransport?.price || 0) + 
+                            selectedEquipment.reduce((sum, eq) => sum + eq.price, 0)}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex justify-between mt-6">
+                    <button 
+                      onClick={() => setBookingStep('equipment')}
+                      className="px-6 py-3 border border-stone-300 text-stone-600 rounded-lg hover:bg-stone-50 transition-colors"
+                    >
+                      Back
+                    </button>
+                    <button 
+                      onClick={() => {
+                        // Handle booking confirmation
+                        alert('Booking confirmed! You will receive a confirmation email shortly.');
+                        setShowBookingModal(false);
+                        setSelectedEvent(null);
+                        setSelectedTransport(null);
+                        setSelectedEquipment([]);
+                        setBookingStep('event');
+                      }}
+                      className="bg-forest-600 text-white px-8 py-3 rounded-lg hover:bg-forest-700 transition-colors organic-btn font-semibold"
+                    >
+                      Confirm Booking
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12 px-4 sm:px-6 lg:px-8 mt-16">
+      <footer className="bg-stone-900 text-white py-12 px-4 sm:px-6 lg:px-8 mt-16">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
               <div className="flex items-center space-x-2 mb-4">
-                <Compass className="h-8 w-8 text-blue-400" />
+                <Compass className="h-8 w-8 text-forest-400" />
                 <h3 className="text-2xl font-bold">TourismHub</h3>
               </div>
-              <p className="text-gray-400">
+              <p className="text-stone-400">
                 Connecting travelers, organizers, transport providers, and equipment rentals for unforgettable experiences.
               </p>
             </div>
             <div>
               <h4 className="text-lg font-semibold mb-4">For Event Seekers</h4>
-              <ul className="space-y-2 text-gray-400">
+              <ul className="space-y-2 text-stone-400">
                 <li>Browse Events</li>
                 <li>Book Experiences</li>
                 <li>Reviews & Ratings</li>
@@ -523,7 +2537,7 @@ function App() {
             </div>
             <div>
               <h4 className="text-lg font-semibold mb-4">For Providers</h4>
-              <ul className="space-y-2 text-gray-400">
+              <ul className="space-y-2 text-stone-400">
                 <li>List Your Services</li>
                 <li>Manage Bookings</li>
                 <li>Analytics Dashboard</li>
@@ -532,7 +2546,7 @@ function App() {
             </div>
             <div>
               <h4 className="text-lg font-semibold mb-4">Support</h4>
-              <ul className="space-y-2 text-gray-400">
+              <ul className="space-y-2 text-stone-400">
                 <li>Help Center</li>
                 <li>Contact Us</li>
                 <li>Safety Guidelines</li>
@@ -540,7 +2554,7 @@ function App() {
               </ul>
             </div>
           </div>
-          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+          <div className="border-t border-stone-800 mt-8 pt-8 text-center text-stone-400">
             <p>&copy; 2025 TourismHub. All rights reserved.</p>
           </div>
         </div>

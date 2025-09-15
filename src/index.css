@@ -1,3 +1,73 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Tourism-themed custom styles */
+@layer base {
+  body {
+    background-color: #e4e4e4;
+    transition: background-color 0.3s ease;
+  }
+  
+  .dark body {
+    background-color: #1a1a1a;
+  }
+}
+
+@layer components {
+  /* Natural texture patterns */
+  .nature-pattern {
+    background-image: 
+      radial-gradient(circle at 20% 50%, rgba(58, 155, 58, 0.15) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(184, 149, 90, 0.15) 0%, transparent 50%),
+      radial-gradient(circle at 40% 80%, rgba(255, 200, 42, 0.15) 0%, transparent 50%);
+  }
+  
+  .dark .nature-pattern {
+    background-image: 
+      radial-gradient(circle at 20% 50%, rgba(58, 155, 58, 0.08) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(184, 149, 90, 0.08) 0%, transparent 50%),
+      radial-gradient(circle at 40% 80%, rgba(255, 200, 42, 0.08) 0%, transparent 50%);
+  }
+  
+  /* Card hover effects with natural shadows */
+  .nature-card {
+    box-shadow: 0 4px 6px -1px rgba(90, 70, 49, 0.1), 0 2px 4px -1px rgba(90, 70, 49, 0.06);
+    transition: all 0.3s ease;
+  }
+  
+  .nature-card:hover {
+    box-shadow: 0 20px 25px -5px rgba(90, 70, 49, 0.1), 0 10px 10px -5px rgba(90, 70, 49, 0.04);
+    transform: translateY(-2px);
+  }
+  
+  .dark .nature-card {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+  }
+  
+  .dark .nature-card:hover {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
+  }
+  
+  /* Organic button styles */
+  .organic-btn {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .organic-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+  }
+  
+  .organic-btn:hover::before {
+    left: 100%;
+  }
+}
