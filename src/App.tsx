@@ -145,6 +145,79 @@ interface TourismAgency {
   insurance: boolean;
 }
 
+interface AIGuide {
+  id: string;
+  name: string;
+  avatar: string;
+  specialty: string;
+  languages: string[];
+  personality: string;
+  expertise: string[];
+  features: string[];
+  interactions: number;
+  rating: number;
+  capabilities: {
+    realTimeTranslation: boolean;
+    voiceInteraction: boolean;
+    visualRecognition: boolean;
+    culturalContext: boolean;
+    emergencyAssistance: boolean;
+  };
+}
+
+interface CulturalExperience {
+  id: string;
+  title: string;
+  tribe: string;
+  region: string;
+  description: string;
+  duration: string;
+  price: number;
+  maxParticipants: number;
+  difficulty: 'Easy' | 'Moderate' | 'Challenging';
+  activities: string[];
+  culturalElements: string[];
+  communityBenefit: string;
+  sustainabilityScore: number;
+  image: string;
+  gallery: string[];
+  localGuide: {
+    name: string;
+    background: string;
+    languages: string[];
+  };
+  authenticity: 'Traditional' | 'Modern Adaptation' | 'Fusion';
+  seasonality: string[];
+}
+
+interface EcoTourismSite {
+  id: string;
+  name: string;
+  type: 'National Park' | 'Wildlife Reserve' | 'Forest Reserve' | 'Wetland' | 'Mountain';
+  location: string;
+  description: string;
+  biodiversity: {
+    species: number;
+    endemicSpecies: number;
+    threatenedSpecies: number;
+  };
+  conservationStatus: 'Excellent' | 'Good' | 'Fair' | 'Needs Attention';
+  sustainabilityFeatures: string[];
+  carbonOffset: number; // kg CO2 offset per visitor
+  communityImpact: {
+    jobsCreated: number;
+    revenueToLocal: number; // percentage
+    educationPrograms: string[];
+  };
+  activities: string[];
+  bestVisitTime: string[];
+  entryFee: number;
+  image: string;
+  certifications: string[];
+  rating: number;
+  reviewCount: number;
+}
+
 const sampleEvents: Event[] = [
   {
     id: '1',
@@ -344,6 +417,240 @@ const sampleTravelPlans: TravelPlan[] = [
     transport: 'Tour Bus',
     bestTime: 'March - May, September - November',
     difficulty: 'Challenging'
+  }
+];
+
+const sampleAIGuides: AIGuide[] = [
+  {
+    id: '1',
+    name: 'Kato AI',
+    avatar: '🤖',
+    specialty: 'Wildlife & Safari Expert',
+    languages: ['English', 'Swahili', 'Luganda', 'French', 'German'],
+    personality: 'Enthusiastic and knowledgeable about Uganda\'s wildlife',
+    expertise: ['Big 5 Animals', 'Bird Watching', 'Conservation', 'Photography Tips'],
+    features: ['Real-time Animal Recognition', 'Behavior Predictions', 'Best Photo Spots', 'Safety Alerts'],
+    interactions: 15420,
+    rating: 4.9,
+    capabilities: {
+      realTimeTranslation: true,
+      voiceInteraction: true,
+      visualRecognition: true,
+      culturalContext: true,
+      emergencyAssistance: true
+    }
+  },
+  {
+    id: '2',
+    name: 'Nakato Cultural AI',
+    avatar: '👩🏿',
+    specialty: 'Cultural Heritage Specialist',
+    languages: ['English', 'Luganda', 'Runyoro', 'Ateso', 'Luo'],
+    personality: 'Warm storyteller passionate about Ugandan traditions',
+    expertise: ['Traditional Ceremonies', 'Local Customs', 'Historical Sites', 'Art & Crafts'],
+    features: ['Cultural Context Explanations', 'Traditional Stories', 'Etiquette Guidance', 'Language Learning'],
+    interactions: 12850,
+    rating: 4.8,
+    capabilities: {
+      realTimeTranslation: true,
+      voiceInteraction: true,
+      visualRecognition: false,
+      culturalContext: true,
+      emergencyAssistance: true
+    }
+  },
+  {
+    id: '3',
+    name: 'Eco-Guide AI',
+    avatar: '🌿',
+    specialty: 'Sustainable Tourism Expert',
+    languages: ['English', 'Swahili', 'French'],
+    personality: 'Environmental advocate focused on conservation',
+    expertise: ['Eco-Tourism', 'Carbon Footprint', 'Conservation Projects', 'Sustainable Practices'],
+    features: ['Carbon Tracking', 'Eco-Friendly Routes', 'Conservation Education', 'Impact Monitoring'],
+    interactions: 8930,
+    rating: 4.7,
+    capabilities: {
+      realTimeTranslation: true,
+      voiceInteraction: true,
+      visualRecognition: true,
+      culturalContext: false,
+      emergencyAssistance: true
+    }
+  }
+];
+
+const sampleCulturalExperiences: CulturalExperience[] = [
+  {
+    id: '1',
+    title: 'Buganda Kingdom Royal Experience',
+    tribe: 'Baganda',
+    region: 'Central Uganda',
+    description: 'Immerse yourself in the rich traditions of the Buganda Kingdom, Uganda\'s largest traditional kingdom. Experience royal ceremonies, traditional music, and ancient customs.',
+    duration: '2 Days',
+    price: 180,
+    maxParticipants: 12,
+    difficulty: 'Easy',
+    activities: ['Royal Palace Tour', 'Traditional Dance Performance', 'Bark Cloth Making', 'Royal Feast'],
+    culturalElements: ['Kabaka\'s Palace', 'Traditional Music', 'Royal Regalia', 'Ancient Ceremonies'],
+    communityBenefit: '70% of proceeds support local artisans and cultural preservation',
+    sustainabilityScore: 85,
+    image: 'https://images.pexels.com/photos/1170986/pexels-photo-1170986.jpeg?auto=compress&cs=tinysrgb&w=400',
+    gallery: ['https://images.pexels.com/photos/1170986/pexels-photo-1170986.jpeg?auto=compress&cs=tinysrgb&w=400'],
+    localGuide: {
+      name: 'Ssalongo Mukasa',
+      background: 'Royal historian and cultural expert with 20+ years experience',
+      languages: ['Luganda', 'English', 'Swahili']
+    },
+    authenticity: 'Traditional',
+    seasonality: ['Year-round', 'Best during cultural festivals']
+  },
+  {
+    id: '2',
+    title: 'Karamoja Warrior Culture Immersion',
+    tribe: 'Karamojong',
+    region: 'Northern Uganda',
+    description: 'Experience the nomadic lifestyle of the Karamojong people, known for their warrior traditions, cattle herding, and unique cultural practices.',
+    duration: '3 Days',
+    price: 220,
+    maxParticipants: 8,
+    difficulty: 'Moderate',
+    activities: ['Cattle Herding', 'Traditional Wrestling', 'Manyatta Visit', 'Beadwork Workshop'],
+    culturalElements: ['Warrior Traditions', 'Nomadic Lifestyle', 'Traditional Attire', 'Oral Traditions'],
+    communityBenefit: '80% supports community development and education programs',
+    sustainabilityScore: 90,
+    image: 'https://images.pexels.com/photos/1170986/pexels-photo-1170986.jpeg?auto=compress&cs=tinysrgb&w=400',
+    gallery: ['https://images.pexels.com/photos/1170986/pexels-photo-1170986.jpeg?auto=compress&cs=tinysrgb&w=400'],
+    localGuide: {
+      name: 'Lokwang Peter',
+      background: 'Karamojong elder and cultural ambassador',
+      languages: ['Karamojong', 'English', 'Swahili']
+    },
+    authenticity: 'Traditional',
+    seasonality: ['Dry season preferred', 'March-October']
+  },
+  {
+    id: '3',
+    title: 'Batwa Pygmy Forest Experience',
+    tribe: 'Batwa',
+    region: 'Southwestern Uganda',
+    description: 'Learn about the indigenous Batwa people, former forest dwellers of Bwindi. Discover their traditional forest survival skills and cultural adaptation.',
+    duration: '1 Day',
+    price: 95,
+    maxParticipants: 15,
+    difficulty: 'Easy',
+    activities: ['Forest Walk', 'Traditional Hunting Demo', 'Fire Making', 'Medicinal Plants Tour'],
+    culturalElements: ['Forest Survival Skills', 'Traditional Medicine', 'Hunting Techniques', 'Cultural Stories'],
+    communityBenefit: '90% directly supports Batwa community development',
+    sustainabilityScore: 95,
+    image: 'https://images.pexels.com/photos/1170986/pexels-photo-1170986.jpeg?auto=compress&cs=tinysrgb&w=400',
+    gallery: ['https://images.pexels.com/photos/1170986/pexels-photo-1170986.jpeg?auto=compress&cs=tinysrgb&w=400'],
+    localGuide: {
+      name: 'Gahinga John',
+      background: 'Batwa cultural leader and forest conservation advocate',
+      languages: ['Rukiga', 'English']
+    },
+    authenticity: 'Traditional',
+    seasonality: ['Year-round', 'Avoid heavy rains']
+  }
+];
+
+const sampleEcoTourismSites: EcoTourismSite[] = [
+  {
+    id: '1',
+    name: 'Bwindi Impenetrable National Park',
+    type: 'National Park',
+    location: 'Southwestern Uganda',
+    description: 'UNESCO World Heritage site home to nearly half of the world\'s mountain gorillas. Ancient rainforest with exceptional biodiversity and community-based conservation.',
+    biodiversity: {
+      species: 400,
+      endemicSpecies: 10,
+      threatenedSpecies: 120
+    },
+    conservationStatus: 'Excellent',
+    sustainabilityFeatures: [
+      'Community Revenue Sharing',
+      'Gorilla Habituation Research',
+      'Reforestation Programs',
+      'Sustainable Tourism Limits'
+    ],
+    carbonOffset: 25,
+    communityImpact: {
+      jobsCreated: 450,
+      revenueToLocal: 75,
+      educationPrograms: ['Conservation Education', 'Eco-Guide Training', 'Community Development']
+    },
+    activities: ['Gorilla Trekking', 'Bird Watching', 'Nature Walks', 'Community Visits'],
+    bestVisitTime: ['June-August', 'December-February'],
+    entryFee: 15,
+    image: 'https://images.pexels.com/photos/631317/pexels-photo-631317.jpeg?auto=compress&cs=tinysrgb&w=400',
+    certifications: ['UNESCO World Heritage', 'IUCN Category II', 'Sustainable Tourism Certified'],
+    rating: 4.9,
+    reviewCount: 1250
+  },
+  {
+    id: '2',
+    name: 'Queen Elizabeth National Park',
+    type: 'National Park',
+    location: 'Western Uganda',
+    description: 'Uganda\'s most popular savanna park with diverse ecosystems, tree-climbing lions, and the famous Kazinga Channel boat safari.',
+    biodiversity: {
+      species: 618,
+      endemicSpecies: 5,
+      threatenedSpecies: 95
+    },
+    conservationStatus: 'Good',
+    sustainabilityFeatures: [
+      'Anti-Poaching Units',
+      'Community Conservancies',
+      'Solar-Powered Facilities',
+      'Waste Management Systems'
+    ],
+    carbonOffset: 18,
+    communityImpact: {
+      jobsCreated: 320,
+      revenueToLocal: 60,
+      educationPrograms: ['Wildlife Conservation', 'Sustainable Fishing', 'Tourism Training']
+    },
+    activities: ['Game Drives', 'Boat Safaris', 'Chimpanzee Tracking', 'Bird Watching'],
+    bestVisitTime: ['December-February', 'June-September'],
+    entryFee: 40,
+    image: 'https://images.pexels.com/photos/1170986/pexels-photo-1170986.jpeg?auto=compress&cs=tinysrgb&w=400',
+    certifications: ['IUCN Category II', 'Ramsar Wetland', 'Sustainable Tourism Gold'],
+    rating: 4.7,
+    reviewCount: 890
+  },
+  {
+    id: '3',
+    name: 'Kibale Forest National Park',
+    type: 'Forest Reserve',
+    location: 'Western Uganda',
+    description: 'Primate capital of the world with 13 primate species including chimpanzees. Tropical rainforest with exceptional primate research and conservation programs.',
+    biodiversity: {
+      species: 372,
+      endemicSpecies: 8,
+      threatenedSpecies: 70
+    },
+    conservationStatus: 'Excellent',
+    sustainabilityFeatures: [
+      'Primate Research Station',
+      'Community Forest Management',
+      'Eco-Lodge Partnerships',
+      'Carbon Sequestration Projects'
+    ],
+    carbonOffset: 30,
+    communityImpact: {
+      jobsCreated: 280,
+      revenueToLocal: 70,
+      educationPrograms: ['Primate Conservation', 'Forest Management', 'Research Training']
+    },
+    activities: ['Chimpanzee Tracking', 'Primate Walks', 'Bird Watching', 'Research Participation'],
+    bestVisitTime: ['February-May', 'September-November'],
+    entryFee: 30,
+    image: 'https://images.pexels.com/photos/1170986/pexels-photo-1170986.jpeg?auto=compress&cs=tinysrgb&w=400',
+    certifications: ['IUCN Category II', 'Primate Research Certified', 'Community Conservation Award'],
+    rating: 4.8,
+    reviewCount: 670
   }
 ];
 
@@ -654,15 +961,66 @@ const sampleVenues: Venue[] = [
 ];
 
 type StakeholderType = 'seeker' | 'organizer' | 'transport' | 'equipment';
-type ServiceType = 'payments' | 'weather' | 'planning' | 'safety' | 'misc' | 'agencies';
+type ServiceType = 'payments' | 'weather' | 'planning' | 'safety' | 'misc' | 'agencies' | 'ai-guide' | 'cultural' | 'eco-tourism';
 
-// Utility functions
+// AI-Powered Utility Functions
 const toggleFavorite = (id: string, favorites: string[], setFavorites: React.Dispatch<React.SetStateAction<string[]>>) => {
   setFavorites(prev => 
     prev.includes(id) 
       ? prev.filter(fav => fav !== id)
       : [...prev, id]
   );
+};
+
+const generateAIRecommendations = (userPreferences: any, currentContext: string) => {
+  const recommendations = [
+    `Based on your interest in ${userPreferences.interests.join(' and ')}, I recommend the Mountain Hiking Adventure`,
+    `The weather is perfect for outdoor activities today - 72°F with sunny skies`,
+    `AI suggests visiting Bwindi National Park during 2-4 PM for optimal gorilla sighting chances`,
+    `Your budget range suggests mid-range accommodations with excellent value`,
+    `Cultural tip: Learning basic Luganda greetings will enhance your local interactions`
+  ];
+  return recommendations;
+};
+
+const aiSmartSearch = (query: string, data: any[]) => {
+  // AI-powered semantic search simulation
+  const keywords = query.toLowerCase().split(' ');
+  return data.filter(item => 
+    keywords.some(keyword => 
+      item.title?.toLowerCase().includes(keyword) ||
+      item.description?.toLowerCase().includes(keyword) ||
+      item.category?.toLowerCase().includes(keyword) ||
+      item.specialties?.some((spec: string) => spec.toLowerCase().includes(keyword))
+    )
+  );
+};
+
+const aiPriceOptimization = (basePrice: number, demand: string, season: string) => {
+  let multiplier = 1;
+  if (demand === 'high') multiplier += 0.2;
+  if (season === 'peak') multiplier += 0.15;
+  return Math.round(basePrice * multiplier);
+};
+
+const aiPersonalizedSorting = (items: any[], userPreferences: any) => {
+  return items.sort((a, b) => {
+    let scoreA = 0, scoreB = 0;
+    
+    // Interest matching
+    if (userPreferences.interests.includes(a.category?.toLowerCase())) scoreA += 10;
+    if (userPreferences.interests.includes(b.category?.toLowerCase())) scoreB += 10;
+    
+    // Budget matching
+    if (userPreferences.budget === 'budget' && a.price < 100) scoreA += 5;
+    if (userPreferences.budget === 'budget' && b.price < 100) scoreB += 5;
+    
+    // Rating boost
+    scoreA += a.rating || 0;
+    scoreB += b.rating || 0;
+    
+    return scoreB - scoreA;
+  });
 };
 
 const getStatusColor = (status: string) => {
@@ -675,10 +1033,11 @@ const getStatusColor = (status: string) => {
 };
 
 const notifications = [
-  { id: 1, type: 'booking', message: 'New booking for Mountain Hiking Adventure', time: '2 min ago', unread: true },
-  { id: 2, type: 'review', message: 'You received a 5-star review!', time: '1 hour ago', unread: true },
-  { id: 3, type: 'payment', message: 'Payment of $125 received', time: '3 hours ago', unread: false },
-  { id: 4, type: 'weather', message: 'Perfect weather for outdoor events today!', time: '6 hours ago', unread: false },
+  { id: 1, type: 'ai', message: 'AI found 3 perfect matches for your interests!', time: '1 min ago', unread: true },
+  { id: 2, type: 'booking', message: 'Smart booking: Mountain Hiking + Transport bundle available', time: '5 min ago', unread: true },
+  { id: 3, type: 'ai', message: 'AI Tip: Best time to visit Bwindi is 2-4 PM today', time: '15 min ago', unread: true },
+  { id: 4, type: 'weather', message: 'AI Weather Alert: Perfect conditions for gorilla trekking!', time: '1 hour ago', unread: false },
+  { id: 5, type: 'ai', message: 'Price drop detected: Cultural tour now 20% off', time: '2 hours ago', unread: false },
 ];
 
 function App() {
@@ -704,6 +1063,21 @@ function App() {
   const [bookingStep, setBookingStep] = useState<'event' | 'transport' | 'equipment' | 'summary'>('event');
   const [selectedTransport, setSelectedTransport] = useState<Transport | null>(null);
   const [selectedEquipment, setSelectedEquipment] = useState<Equipment[]>([]);
+  const [aiAssistantActive, setAiAssistantActive] = useState(true);
+  const [aiRecommendations, setAiRecommendations] = useState<string[]>([]);
+  const [aiChatHistory, setAiChatHistory] = useState<{role: 'user' | 'ai', message: string, timestamp: Date}[]>([]);
+  const [aiPersonalization, setAiPersonalization] = useState({
+    interests: ['wildlife', 'culture'],
+    budget: 'mid-range',
+    travelStyle: 'adventure',
+    language: 'english'
+  });
+  const [aiPredictions, setAiPredictions] = useState({
+    weatherOptimal: true,
+    crowdLevel: 'moderate',
+    bestTimeToVisit: '2:00 PM',
+    recommendedDuration: '4 hours'
+  });
 
   // Toggle dark mode
   const toggleDarkMode = () => {
@@ -723,7 +1097,10 @@ function App() {
   ];
 
   const additionalServices = [
-    { id: 'agencies' as ServiceType, label: 'Tourism Agencies', icon: Award, color: 'bg-forest-600', description: 'Verified Ugandan tourism companies' },
+    { id: 'ai-guide' as ServiceType, label: 'AI-Powered Guides', icon: Zap, color: 'bg-forest-600', description: 'Smart AI companions for your Uganda journey' },
+    { id: 'cultural' as ServiceType, label: 'Cultural Experiences', icon: Users, color: 'bg-earth-600', description: 'Authentic tribal and cultural immersions' },
+    { id: 'eco-tourism' as ServiceType, label: 'Eco-Tourism', icon: Mountain, color: 'bg-sunshine-600', description: 'Sustainable wildlife and nature experiences' },
+    { id: 'agencies' as ServiceType, label: 'Tourism Agencies', icon: Award, color: 'bg-stone-600', description: 'Verified Ugandan tourism companies' },
     { id: 'payments' as ServiceType, label: 'Payments & Rates', icon: CreditCard, color: 'bg-earth-600', description: 'Payment processing rates and methods' },
     { id: 'weather' as ServiceType, label: 'Weather Info', icon: Cloud, color: 'bg-sunshine-600', description: 'Real-time weather and forecasts' },
     { id: 'planning' as ServiceType, label: 'Travel Planning', icon: Route, color: 'bg-stone-600', description: 'Curated travel plans and itineraries' },
@@ -779,11 +1156,23 @@ function App() {
                 )}
               </button>
 
-              {/* Weather Widget */}
+              {/* AI Status Indicator */}
+              <div className="hidden lg:flex items-center space-x-2 bg-gradient-to-r from-forest-500 to-forest-600 text-white px-4 py-2 rounded-full shadow-lg">
+                <Zap className="h-4 w-4 animate-pulse" />
+                <span className="text-sm font-medium">AI Active</span>
+                <div className="w-2 h-2 bg-white rounded-full animate-ping"></div>
+              </div>
+
+              {/* AI-Enhanced Weather Widget */}
               <div className="hidden lg:flex items-center space-x-2 bg-white/80 dark:bg-dark-200/80 backdrop-blur-sm px-3 py-2 rounded-full border border-earth-200 dark:border-dark-300">
                 <div className="text-sunshine-500">☀️</div>
                 <span className="text-sm font-medium text-stone-700 dark:text-dark-800">{weatherData.temp}°F</span>
                 <span className="text-xs text-stone-500 dark:text-dark-700">{weatherData.location}</span>
+                {aiPredictions.weatherOptimal && (
+                  <div className="text-xs bg-forest-100 text-forest-800 px-2 py-0.5 rounded-full ml-2">
+                    AI: Perfect!
+                  </div>
+                )}
               </div>
 
               {/* Live Stats */}
@@ -798,22 +1187,44 @@ function App() {
                 </div>
               </div>
 
-              {/* Advanced Search */}
+              {/* AI-Powered Search */}
               <div className="relative hidden md:block">
-                <Search className="h-5 w-5 text-stone-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
-                <input
-                  type="text"
-                  placeholder="Search events, venues, transport..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 pr-12 py-2 w-64 border border-earth-300 rounded-full focus:outline-none focus:ring-2 focus:ring-forest-500 focus:border-transparent bg-white/70 backdrop-blur-sm"
-                />
-                <button 
-                  onClick={() => setShowFilters(!showFilters)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-stone-400 hover:text-forest-600"
-                >
-                  <Filter className="h-4 w-4" />
-                </button>
+                <div className="flex items-center">
+                  <Zap className="h-4 w-4 text-forest-500 absolute left-3 top-1/2 transform -translate-y-1/2 animate-pulse" />
+                  <Search className="h-4 w-4 text-stone-400 absolute left-8 top-1/2 transform -translate-y-1/2" />
+                  <input
+                    type="text"
+                    placeholder="Ask AI: 'Find gorilla trekking tours'..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-16 pr-12 py-2 w-80 border border-earth-300 rounded-full focus:outline-none focus:ring-2 focus:ring-forest-500 focus:border-transparent bg-white/70 backdrop-blur-sm"
+                  />
+                  <button 
+                    onClick={() => setShowFilters(!showFilters)}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-stone-400 hover:text-forest-600"
+                  >
+                    <Filter className="h-4 w-4" />
+                  </button>
+                </div>
+                {searchQuery && (
+                  <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-lg border border-stone-200 p-3 z-50">
+                    <div className="flex items-center space-x-2 mb-2">
+                      <Zap className="h-4 w-4 text-forest-500" />
+                      <span className="text-sm font-medium text-stone-900">AI Suggestions</span>
+                    </div>
+                    <div className="space-y-1">
+                      <div className="text-sm text-stone-600 hover:bg-forest-50 p-2 rounded cursor-pointer">
+                        🦍 Gorilla trekking in Bwindi National Park
+                      </div>
+                      <div className="text-sm text-stone-600 hover:bg-forest-50 p-2 rounded cursor-pointer">
+                        🏔️ Mountain hiking adventures in Rwenzori
+                      </div>
+                      <div className="text-sm text-stone-600 hover:bg-forest-50 p-2 rounded cursor-pointer">
+                        🎭 Cultural experiences with Buganda Kingdom
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Notifications */}
@@ -839,10 +1250,11 @@ function App() {
                         <div key={notification.id} className={`p-4 border-b border-stone-100 hover:bg-stone-50 ${notification.unread ? 'bg-forest-50/30' : ''}`}>
                           <div className="flex items-start space-x-3">
                             <div className={`p-1 rounded-full ${notification.unread ? 'bg-forest-100' : 'bg-stone-100'}`}>
-                              {notification.type === 'booking' && <Calendar className="h-4 w-4 text-forest-600" />}
+                              {notification.type === 'ai' && <Zap className="h-4 w-4 text-forest-600" />}
+                              {notification.type === 'booking' && <Calendar className="h-4 w-4 text-earth-600" />}
                               {notification.type === 'review' && <Star className="h-4 w-4 text-sunshine-600" />}
                               {notification.type === 'payment' && <CreditCard className="h-4 w-4 text-earth-600" />}
-                              {notification.type === 'weather' && <Globe className="h-4 w-4 text-stone-600" />}
+                              {notification.type === 'weather' && <Cloud className="h-4 w-4 text-sunshine-600" />}
                             </div>
                             <div className="flex-1">
                               <p className="text-sm text-stone-900">{notification.message}</p>
@@ -982,15 +1394,34 @@ function App() {
       {/* Hero Section */}
       <section className="relative py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto text-center">
+          <div className="flex items-center justify-center mb-4">
+            <div className="bg-gradient-to-r from-forest-500 to-forest-600 text-white px-6 py-2 rounded-full flex items-center space-x-2">
+              <Zap className="h-5 w-5 animate-pulse" />
+              <span className="font-medium">AI-Powered Tourism Platform</span>
+            </div>
+          </div>
+          
           <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-stone-900 mb-6">
-            Your Gateway to{' '}
+            Your AI Gateway to{' '}
             <span className="bg-gradient-to-r from-forest-600 via-sunshine-600 to-earth-600 bg-clip-text text-transparent">
-              Amazing Experiences
+              Uganda's Wonders
             </span>
           </h2>
           <p className="text-xl text-stone-600 mb-8 max-w-3xl mx-auto">
-            Connect with event organizers, find transportation, rent equipment, and discover unforgettable experiences all in one place.
+            Experience Uganda like never before with AI-powered recommendations, smart cultural insights, and personalized adventure planning.
           </p>
+
+          {/* AI Stats */}
+          <div className="flex items-center justify-center space-x-8 mb-8 text-sm">
+            <div className="flex items-center space-x-2">
+              <div className="w-3 h-3 bg-forest-500 rounded-full animate-pulse"></div>
+              <span className="text-stone-600">AI analyzing 15.2K+ tourist preferences</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Zap className="h-4 w-4 text-sunshine-500" />
+              <span className="text-stone-600">Smart recommendations in real-time</span>
+            </div>
+          </div>
           
           {/* Main Category Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
@@ -1011,12 +1442,22 @@ function App() {
                     <Icon className="h-8 w-8 text-white" />
                   </div>
                   <h3 className="text-lg font-semibold text-stone-900 mb-2">{tab.label}</h3>
-                  <p className="text-stone-600 text-sm">
-                    {tab.id === 'seeker' && 'Discover amazing events and experiences'}
-                    {tab.id === 'organizer' && 'Create and manage your events'}
-                    {tab.id === 'transport' && 'Provide transportation services'}
-                    {tab.id === 'equipment' && 'Rent out your equipment'}
+                  <p className="text-stone-600 text-sm mb-2">
+                    {tab.id === 'seeker' && 'AI-curated experiences just for you'}
+                    {tab.id === 'organizer' && 'Smart event management with AI insights'}
+                    {tab.id === 'transport' && 'AI-optimized routes and pricing'}
+                    {tab.id === 'equipment' && 'Smart equipment recommendations'}
                   </p>
+                  {/* AI Personalization Indicator */}
+                  <div className="flex items-center justify-center space-x-1 text-xs">
+                    <Zap className="h-3 w-3 text-forest-500" />
+                    <span className="text-forest-600 font-medium">
+                      {tab.id === 'seeker' && `${Math.floor(Math.random() * 20) + 80}% match`}
+                      {tab.id === 'organizer' && 'AI-powered'}
+                      {tab.id === 'transport' && 'Smart routing'}
+                      {tab.id === 'equipment' && 'Auto-suggest'}
+                    </span>
+                  </div>
                 </button>
               );
             })}
@@ -1043,7 +1484,11 @@ function App() {
                       <Icon className="h-6 w-6 text-white" />
                     </div>
                     <h4 className="text-sm font-semibold text-stone-900 mb-1">{service.label}</h4>
-                    <p className="text-xs text-stone-600">{service.description}</p>
+                    <p className="text-xs text-stone-600 mb-2">{service.description}</p>
+                    <div className="flex items-center justify-center space-x-1">
+                      <Zap className="h-2 w-2 text-forest-500" />
+                      <span className="text-xs text-forest-600 font-medium">AI-Enhanced</span>
+                    </div>
                   </button>
                 );
               })}
@@ -1056,6 +1501,534 @@ function App() {
       <section className="py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           {/* Service-Specific Content */}
+          {activeService === 'ai-guide' && (
+            <div>
+              <div className="text-center mb-12">
+                <div className="flex items-center justify-center mb-4">
+                  <Zap className="h-12 w-12 text-forest-600 mr-4" />
+                  <h3 className="text-3xl font-bold text-stone-900">AI-Powered Uganda Guides</h3>
+                </div>
+                <p className="text-stone-600 max-w-3xl mx-auto">
+                  Meet your intelligent travel companions! Our AI guides provide real-time assistance, cultural insights, and personalized recommendations throughout your Uganda adventure.
+                </p>
+              </div>
+
+              {/* AI Guides Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+                {sampleAIGuides.map((guide) => (
+                  <div key={guide.id} className="bg-white rounded-2xl nature-card p-6 text-center">
+                    {/* AI Avatar */}
+                    <div className="w-20 h-20 bg-gradient-to-br from-forest-400 to-forest-600 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">
+                      {guide.avatar}
+                    </div>
+                    
+                    <h4 className="text-xl font-bold text-stone-900 mb-2">{guide.name}</h4>
+                    <p className="text-forest-600 font-medium mb-3">{guide.specialty}</p>
+                    <p className="text-stone-600 text-sm mb-4">{guide.personality}</p>
+
+                    {/* Rating & Interactions */}
+                    <div className="flex items-center justify-center space-x-4 mb-4">
+                      <div className="flex items-center">
+                        <Star className="h-4 w-4 text-sunshine-500 fill-current mr-1" />
+                        <span className="font-semibold">{guide.rating}</span>
+                      </div>
+                      <div className="text-sm text-stone-600">
+                        {guide.interactions.toLocaleString()} interactions
+                      </div>
+                    </div>
+
+                    {/* Languages */}
+                    <div className="mb-4">
+                      <h5 className="font-semibold text-stone-900 mb-2">Languages</h5>
+                      <div className="flex flex-wrap gap-1 justify-center">
+                        {guide.languages.map((lang, index) => (
+                          <span
+                            key={index}
+                            className="bg-sunshine-100 text-sunshine-800 text-xs px-2 py-1 rounded"
+                          >
+                            {lang}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Capabilities */}
+                    <div className="mb-6">
+                      <h5 className="font-semibold text-stone-900 mb-2">AI Capabilities</h5>
+                      <div className="space-y-2">
+                        {Object.entries(guide.capabilities).map(([capability, enabled]) => (
+                          <div key={capability} className="flex items-center justify-between text-sm">
+                            <span className="text-stone-600 capitalize">
+                              {capability.replace(/([A-Z])/g, ' $1').trim()}
+                            </span>
+                            {enabled ? (
+                              <CheckCircle className="h-4 w-4 text-forest-500" />
+                            ) : (
+                              <XCircle className="h-4 w-4 text-stone-400" />
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Expertise */}
+                    <div className="mb-6">
+                      <h5 className="font-semibold text-stone-900 mb-2">Expertise</h5>
+                      <div className="flex flex-wrap gap-1 justify-center">
+                        {guide.expertise.slice(0, 3).map((skill, index) => (
+                          <span
+                            key={index}
+                            className="bg-forest-100 text-forest-800 text-xs px-2 py-1 rounded"
+                          >
+                            {skill}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    <button className="w-full bg-forest-600 text-white py-3 rounded-lg hover:bg-forest-700 transition-colors organic-btn font-medium">
+                      Activate {guide.name}
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+              {/* AI Features Showcase */}
+              <div className="bg-gradient-to-r from-forest-50 to-sunshine-50 rounded-2xl p-8 mb-12">
+                <h4 className="text-2xl font-bold text-stone-900 text-center mb-8">AI Guide Features</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                  <div className="text-center">
+                    <div className="w-16 h-16 bg-forest-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <MessageCircle className="h-8 w-8 text-white" />
+                    </div>
+                    <h5 className="font-semibold text-stone-900 mb-2">Real-Time Chat</h5>
+                    <p className="text-stone-600 text-sm">Ask questions and get instant responses in your preferred language</p>
+                  </div>
+                  <div className="text-center">
+                    <div className="w-16 h-16 bg-earth-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Camera className="h-8 w-8 text-white" />
+                    </div>
+                    <h5 className="font-semibold text-stone-900 mb-2">Visual Recognition</h5>
+                    <p className="text-stone-600 text-sm">Point your camera at animals, plants, or landmarks for instant information</p>
+                  </div>
+                  <div className="text-center">
+                    <div className="w-16 h-16 bg-sunshine-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Navigation className="h-8 w-8 text-white" />
+                    </div>
+                    <h5 className="font-semibold text-stone-900 mb-2">Smart Navigation</h5>
+                    <p className="text-stone-600 text-sm">Get personalized routes and recommendations based on your interests</p>
+                  </div>
+                  <div className="text-center">
+                    <div className="w-16 h-16 bg-stone-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Shield className="h-8 w-8 text-white" />
+                    </div>
+                    <h5 className="font-semibold text-stone-900 mb-2">Emergency Support</h5>
+                    <p className="text-stone-600 text-sm">24/7 emergency assistance and safety monitoring</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Demo Chat Interface */}
+              <div className="bg-white rounded-2xl nature-card p-6">
+                <h4 className="text-xl font-bold text-stone-900 mb-4">Try AI Guide Demo</h4>
+                <div className="bg-stone-50 rounded-lg p-4 h-64 overflow-y-auto mb-4">
+                  <div className="space-y-3">
+                    <div className="flex items-start space-x-3">
+                      <div className="w-8 h-8 bg-forest-600 rounded-full flex items-center justify-center text-white text-sm">🤖</div>
+                      <div className="bg-white p-3 rounded-lg shadow-sm">
+                        <p className="text-sm">Hello! I'm Kato AI, your Uganda wildlife guide. What would you like to explore today?</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start space-x-3 justify-end">
+                      <div className="bg-forest-100 p-3 rounded-lg">
+                        <p className="text-sm">Tell me about mountain gorillas in Bwindi</p>
+                      </div>
+                      <div className="w-8 h-8 bg-stone-400 rounded-full flex items-center justify-center text-white text-sm">👤</div>
+                    </div>
+                    <div className="flex items-start space-x-3">
+                      <div className="w-8 h-8 bg-forest-600 rounded-full flex items-center justify-center text-white text-sm">🤖</div>
+                      <div className="bg-white p-3 rounded-lg shadow-sm">
+                        <p className="text-sm">Bwindi is home to nearly half of the world's mountain gorillas! There are about 459 gorillas in 19 habituated groups. The best time to visit is during dry seasons (June-August, December-February). Would you like me to help you plan a gorilla trekking experience?</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex space-x-2">
+                  <input
+                    type="text"
+                    placeholder="Ask your AI guide anything about Uganda..."
+                    className="flex-1 px-4 py-2 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-forest-500"
+                  />
+                  <button className="bg-forest-600 text-white px-6 py-2 rounded-lg hover:bg-forest-700 transition-colors">
+                    Send
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeService === 'cultural' && (
+            <div>
+              <div className="text-center mb-12">
+                <div className="flex items-center justify-center mb-4">
+                  <Users className="h-12 w-12 text-earth-600 mr-4" />
+                  <h3 className="text-3xl font-bold text-stone-900">Authentic Cultural Experiences</h3>
+                </div>
+                <p className="text-stone-600 max-w-3xl mx-auto">
+                  Immerse yourself in Uganda's rich cultural heritage through authentic experiences with local communities. Support sustainable tourism while learning about diverse tribal traditions.
+                </p>
+              </div>
+
+              {/* Cultural Experiences Grid */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+                {sampleCulturalExperiences.map((experience) => (
+                  <div key={experience.id} className="bg-white rounded-2xl nature-card overflow-hidden">
+                    <div className="relative">
+                      <img
+                        src={experience.image}
+                        alt={experience.title}
+                        className="w-full h-48 object-cover"
+                      />
+                      <div className="absolute top-4 right-4 flex flex-col gap-2">
+                        <div className={`px-3 py-1 rounded-full text-xs font-medium ${
+                          experience.authenticity === 'Traditional' ? 'bg-forest-500 text-white' :
+                          experience.authenticity === 'Modern Adaptation' ? 'bg-sunshine-500 text-white' :
+                          'bg-earth-500 text-white'
+                        }`}>
+                          {experience.authenticity}
+                        </div>
+                        <div className="bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full">
+                          <span className="text-sm font-semibold text-stone-900">${experience.price}</span>
+                        </div>
+                      </div>
+                      <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full">
+                        <div className="flex items-center">
+                          <div className="w-2 h-2 bg-forest-500 rounded-full mr-2"></div>
+                          <span className="text-sm font-medium text-stone-900">Sustainability: {experience.sustainabilityScore}%</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="p-6">
+                      <div className="flex items-start justify-between mb-3">
+                        <div>
+                          <h4 className="text-xl font-bold text-stone-900 mb-1">{experience.title}</h4>
+                          <p className="text-earth-600 font-medium">{experience.tribe} • {experience.region}</p>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-sm text-stone-600">{experience.duration}</div>
+                          <div className={`text-xs px-2 py-1 rounded ${
+                            experience.difficulty === 'Easy' ? 'bg-forest-100 text-forest-800' :
+                            experience.difficulty === 'Moderate' ? 'bg-sunshine-100 text-sunshine-800' :
+                            'bg-earth-100 text-earth-800'
+                          }`}>
+                            {experience.difficulty}
+                          </div>
+                        </div>
+                      </div>
+
+                      <p className="text-stone-600 text-sm mb-4 leading-relaxed">{experience.description}</p>
+
+                      {/* Cultural Elements */}
+                      <div className="mb-4">
+                        <h5 className="font-semibold text-stone-900 mb-2">Cultural Elements</h5>
+                        <div className="flex flex-wrap gap-1">
+                          {experience.culturalElements.map((element, index) => (
+                            <span
+                              key={index}
+                              className="bg-earth-100 text-earth-800 text-xs px-2 py-1 rounded"
+                            >
+                              {element}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Activities */}
+                      <div className="mb-4">
+                        <h5 className="font-semibold text-stone-900 mb-2">Activities Included</h5>
+                        <div className="grid grid-cols-2 gap-1">
+                          {experience.activities.map((activity, index) => (
+                            <div key={index} className="flex items-center text-sm text-stone-600">
+                              <CheckCircle className="h-3 w-3 text-forest-500 mr-2 flex-shrink-0" />
+                              <span>{activity}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Local Guide */}
+                      <div className="mb-4 bg-stone-50 p-3 rounded-lg">
+                        <h5 className="font-semibold text-stone-900 mb-2">Your Local Guide</h5>
+                        <div className="flex items-start space-x-3">
+                          <div className="w-10 h-10 bg-earth-600 rounded-full flex items-center justify-center text-white font-bold">
+                            {experience.localGuide.name.charAt(0)}
+                          </div>
+                          <div>
+                            <p className="font-medium text-stone-900">{experience.localGuide.name}</p>
+                            <p className="text-xs text-stone-600 mb-1">{experience.localGuide.background}</p>
+                            <div className="flex flex-wrap gap-1">
+                              {experience.localGuide.languages.map((lang, index) => (
+                                <span
+                                  key={index}
+                                  className="bg-white text-stone-600 text-xs px-1 py-0.5 rounded"
+                                >
+                                  {lang}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Community Benefit */}
+                      <div className="mb-6 bg-forest-50 p-3 rounded-lg">
+                        <div className="flex items-center mb-2">
+                          <Heart className="h-4 w-4 text-forest-600 mr-2" />
+                          <h5 className="font-semibold text-stone-900">Community Impact</h5>
+                        </div>
+                        <p className="text-sm text-stone-600">{experience.communityBenefit}</p>
+                      </div>
+
+                      {/* Booking Info */}
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="text-sm text-stone-600">
+                          <div className="flex items-center">
+                            <Users className="h-4 w-4 mr-1" />
+                            <span>Max {experience.maxParticipants} participants</span>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-2xl font-bold text-earth-600">${experience.price}</div>
+                          <div className="text-xs text-stone-500">per person</div>
+                        </div>
+                      </div>
+
+                      <button className="w-full bg-earth-600 text-white py-3 rounded-lg hover:bg-earth-700 transition-colors organic-btn font-medium">
+                        Book Cultural Experience
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Cultural Impact Section */}
+              <div className="bg-gradient-to-r from-earth-50 to-forest-50 rounded-2xl p-8">
+                <h4 className="text-2xl font-bold text-stone-900 text-center mb-8">Cultural Tourism Impact</h4>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="text-center">
+                    <div className="w-16 h-16 bg-earth-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Users className="h-8 w-8 text-white" />
+                    </div>
+                    <h5 className="font-semibold text-stone-900 mb-2">Community Empowerment</h5>
+                    <p className="text-stone-600 text-sm">Direct economic benefits to local communities through authentic cultural sharing</p>
+                  </div>
+                  <div className="text-center">
+                    <div className="w-16 h-16 bg-forest-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Award className="h-8 w-8 text-white" />
+                    </div>
+                    <h5 className="font-semibold text-stone-900 mb-2">Cultural Preservation</h5>
+                    <p className="text-stone-600 text-sm">Supporting the preservation of traditional practices and knowledge</p>
+                  </div>
+                  <div className="text-center">
+                    <div className="w-16 h-16 bg-sunshine-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Heart className="h-8 w-8 text-white" />
+                    </div>
+                    <h5 className="font-semibold text-stone-900 mb-2">Authentic Connections</h5>
+                    <p className="text-stone-600 text-sm">Meaningful cultural exchange between visitors and local communities</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeService === 'eco-tourism' && (
+            <div>
+              <div className="text-center mb-12">
+                <div className="flex items-center justify-center mb-4">
+                  <Mountain className="h-12 w-12 text-sunshine-600 mr-4" />
+                  <h3 className="text-3xl font-bold text-stone-900">Sustainable Eco-Tourism</h3>
+                </div>
+                <p className="text-stone-600 max-w-3xl mx-auto">
+                  Explore Uganda's incredible biodiversity while supporting conservation efforts and local communities. Our eco-tourism sites prioritize sustainability and environmental protection.
+                </p>
+              </div>
+
+              {/* Eco-Tourism Sites Grid */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 mb-12">
+                {sampleEcoTourismSites.map((site) => (
+                  <div key={site.id} className="bg-white rounded-2xl nature-card overflow-hidden">
+                    <div className="relative">
+                      <img
+                        src={site.image}
+                        alt={site.name}
+                        className="w-full h-48 object-cover"
+                      />
+                      <div className="absolute top-4 right-4 flex flex-col gap-2">
+                        <div className={`px-3 py-1 rounded-full text-xs font-medium ${
+                          site.conservationStatus === 'Excellent' ? 'bg-forest-500 text-white' :
+                          site.conservationStatus === 'Good' ? 'bg-sunshine-500 text-white' :
+                          'bg-earth-500 text-white'
+                        }`}>
+                          {site.conservationStatus}
+                        </div>
+                        <div className="bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full">
+                          <span className="text-sm font-semibold text-stone-900">${site.entryFee}</span>
+                        </div>
+                      </div>
+                      <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full">
+                        <div className="flex items-center">
+                          <Star className="h-4 w-4 text-sunshine-500 fill-current mr-1" />
+                          <span className="font-semibold text-stone-900">{site.rating}</span>
+                          <span className="text-stone-600 text-sm ml-1">({site.reviewCount})</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="p-6">
+                      <div className="flex items-start justify-between mb-3">
+                        <div>
+                          <h4 className="text-xl font-bold text-stone-900 mb-1">{site.name}</h4>
+                          <p className="text-sunshine-600 font-medium">{site.type} • {site.location}</p>
+                        </div>
+                      </div>
+
+                      <p className="text-stone-600 text-sm mb-4 leading-relaxed">{site.description}</p>
+
+                      {/* Biodiversity Stats */}
+                      <div className="mb-4 bg-forest-50 p-3 rounded-lg">
+                        <h5 className="font-semibold text-stone-900 mb-2">Biodiversity</h5>
+                        <div className="grid grid-cols-3 gap-2 text-center">
+                          <div>
+                            <div className="text-lg font-bold text-forest-600">{site.biodiversity.species}</div>
+                            <div className="text-xs text-stone-600">Species</div>
+                          </div>
+                          <div>
+                            <div className="text-lg font-bold text-earth-600">{site.biodiversity.endemicSpecies}</div>
+                            <div className="text-xs text-stone-600">Endemic</div>
+                          </div>
+                          <div>
+                            <div className="text-lg font-bold text-sunshine-600">{site.biodiversity.threatenedSpecies}</div>
+                            <div className="text-xs text-stone-600">Threatened</div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Sustainability Features */}
+                      <div className="mb-4">
+                        <h5 className="font-semibold text-stone-900 mb-2">Sustainability Features</h5>
+                        <div className="space-y-1">
+                          {site.sustainabilityFeatures.slice(0, 3).map((feature, index) => (
+                            <div key={index} className="flex items-center text-sm text-stone-600">
+                              <CheckCircle className="h-3 w-3 text-forest-500 mr-2 flex-shrink-0" />
+                              <span>{feature}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Carbon Offset */}
+                      <div className="mb-4 bg-sunshine-50 p-3 rounded-lg">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center">
+                            <Mountain className="h-4 w-4 text-sunshine-600 mr-2" />
+                            <span className="font-semibold text-stone-900">Carbon Offset</span>
+                          </div>
+                          <span className="text-lg font-bold text-sunshine-600">{site.carbonOffset} kg CO₂</span>
+                        </div>
+                        <p className="text-xs text-stone-600 mt-1">Per visitor contribution to carbon sequestration</p>
+                      </div>
+
+                      {/* Community Impact */}
+                      <div className="mb-4 bg-earth-50 p-3 rounded-lg">
+                        <h5 className="font-semibold text-stone-900 mb-2">Community Impact</h5>
+                        <div className="grid grid-cols-2 gap-2 text-sm">
+                          <div>
+                            <div className="font-bold text-earth-600">{site.communityImpact.jobsCreated}</div>
+                            <div className="text-xs text-stone-600">Jobs Created</div>
+                          </div>
+                          <div>
+                            <div className="font-bold text-earth-600">{site.communityImpact.revenueToLocal}%</div>
+                            <div className="text-xs text-stone-600">Local Revenue</div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Activities */}
+                      <div className="mb-4">
+                        <h5 className="font-semibold text-stone-900 mb-2">Activities</h5>
+                        <div className="flex flex-wrap gap-1">
+                          {site.activities.map((activity, index) => (
+                            <span
+                              key={index}
+                              className="bg-stone-100 text-stone-700 text-xs px-2 py-1 rounded"
+                            >
+                              {activity}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Best Visit Time */}
+                      <div className="mb-6">
+                        <h5 className="font-semibold text-stone-900 mb-2">Best Visit Time</h5>
+                        <div className="flex flex-wrap gap-1">
+                          {site.bestVisitTime.map((time, index) => (
+                            <span
+                              key={index}
+                              className="bg-sunshine-100 text-sunshine-800 text-xs px-2 py-1 rounded"
+                            >
+                              {time}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                      <button className="w-full bg-sunshine-600 text-white py-3 rounded-lg hover:bg-sunshine-700 transition-colors organic-btn font-medium">
+                        Plan Eco-Visit
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Sustainability Impact */}
+              <div className="bg-gradient-to-r from-sunshine-50 to-forest-50 rounded-2xl p-8">
+                <h4 className="text-2xl font-bold text-stone-900 text-center mb-8">Your Eco-Tourism Impact</h4>
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                  <div className="text-center">
+                    <div className="w-16 h-16 bg-forest-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Mountain className="h-8 w-8 text-white" />
+                    </div>
+                    <h5 className="font-semibold text-stone-900 mb-2">Conservation Funding</h5>
+                    <p className="text-stone-600 text-sm">Your visit directly funds wildlife protection and habitat conservation</p>
+                  </div>
+                  <div className="text-center">
+                    <div className="w-16 h-16 bg-earth-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Users className="h-8 w-8 text-white" />
+                    </div>
+                    <h5 className="font-semibold text-stone-900 mb-2">Local Employment</h5>
+                    <p className="text-stone-600 text-sm">Supporting local communities through sustainable job creation</p>
+                  </div>
+                  <div className="text-center">
+                    <div className="w-16 h-16 bg-sunshine-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Globe className="h-8 w-8 text-white" />
+                    </div>
+                    <h5 className="font-semibold text-stone-900 mb-2">Carbon Positive</h5>
+                    <p className="text-stone-600 text-sm">Every visit contributes to carbon sequestration and climate action</p>
+                  </div>
+                  <div className="text-center">
+                    <div className="w-16 h-16 bg-stone-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Award className="h-8 w-8 text-white" />
+                    </div>
+                    <h5 className="font-semibold text-stone-900 mb-2">Research Support</h5>
+                    <p className="text-stone-600 text-sm">Contributing to scientific research and species monitoring programs</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           {activeService === 'agencies' && (
             <div>
               <div className="text-center mb-12">
@@ -1625,11 +2598,23 @@ function App() {
                         <span className="text-sm font-bold">${event.price}</span>
                       </div>
 
-                      {/* Live Badge for trending events */}
+                      {/* AI-Powered Badges */}
                       {event.id === '1' && (
-                        <div className="absolute top-4 left-4 bg-gradient-to-r from-red-500 to-red-600 text-white px-3 py-1 rounded-full shadow-lg flex items-center space-x-1">
-                          <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-                          <span className="text-xs font-bold">TRENDING</span>
+                        <div className="absolute top-4 left-4 bg-gradient-to-r from-forest-500 to-forest-600 text-white px-3 py-1 rounded-full shadow-lg flex items-center space-x-1">
+                          <Zap className="w-3 h-3 animate-pulse" />
+                          <span className="text-xs font-bold">AI RECOMMENDED</span>
+                        </div>
+                      )}
+                      {event.id === '2' && (
+                        <div className="absolute top-4 left-4 bg-gradient-to-r from-sunshine-500 to-sunshine-600 text-white px-3 py-1 rounded-full shadow-lg flex items-center space-x-1">
+                          <TrendingUp className="w-3 h-3" />
+                          <span className="text-xs font-bold">AI TRENDING</span>
+                        </div>
+                      )}
+                      {event.id === '3' && (
+                        <div className="absolute top-4 left-4 bg-gradient-to-r from-earth-500 to-earth-600 text-white px-3 py-1 rounded-full shadow-lg flex items-center space-x-1">
+                          <Award className="w-3 h-3" />
+                          <span className="text-xs font-bold">AI MATCH 94%</span>
                         </div>
                       )}
 
@@ -2512,6 +3497,97 @@ function App() {
           </div>
         </div>
       )}
+
+      {/* AI Floating Assistant */}
+      {aiAssistantActive && (
+        <div className="fixed bottom-6 right-6 z-50">
+          <div className="bg-gradient-to-r from-forest-500 to-forest-600 rounded-2xl shadow-2xl p-4 max-w-sm">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center space-x-2">
+                <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
+                  <Zap className="h-5 w-5 text-forest-600" />
+                </div>
+                <div>
+                  <h4 className="text-white font-semibold text-sm">Uganda AI Assistant</h4>
+                  <p className="text-forest-100 text-xs">Powered by Smart Tourism AI</p>
+                </div>
+              </div>
+              <button 
+                onClick={() => setAiAssistantActive(false)}
+                className="text-white/70 hover:text-white"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+            
+            <div className="bg-white/10 rounded-lg p-3 mb-3">
+              <p className="text-white text-sm">
+                🤖 I'm analyzing your preferences... Based on your interests in {aiPersonalization.interests.join(' & ')}, 
+                I recommend exploring our {activeService || activeTab} section!
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <button className="w-full bg-white/20 hover:bg-white/30 text-white text-sm py-2 px-3 rounded-lg transition-colors flex items-center">
+                <MessageCircle className="h-4 w-4 mr-2" />
+                Ask AI Anything
+              </button>
+              <button className="w-full bg-white/20 hover:bg-white/30 text-white text-sm py-2 px-3 rounded-lg transition-colors flex items-center">
+                <Zap className="h-4 w-4 mr-2" />
+                Get Smart Recommendations
+              </button>
+            </div>
+
+            {/* AI Insights */}
+            <div className="mt-3 pt-3 border-t border-white/20">
+              <div className="flex items-center justify-between text-xs text-forest-100">
+                <span>AI Confidence: 94%</span>
+                <span>Learning from 15.2K+ tourists</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* AI Recommendations Sidebar */}
+      <div className="fixed left-6 top-1/2 transform -translate-y-1/2 z-40 hidden xl:block">
+        <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg p-4 w-64">
+          <div className="flex items-center space-x-2 mb-4">
+            <Zap className="h-5 w-5 text-forest-600" />
+            <h4 className="font-semibold text-stone-900">AI Insights</h4>
+          </div>
+          
+          <div className="space-y-3">
+            <div className="bg-forest-50 p-3 rounded-lg">
+              <div className="flex items-center space-x-2 mb-2">
+                <TrendingUp className="h-4 w-4 text-forest-600" />
+                <span className="text-sm font-medium text-stone-900">Trending Now</span>
+              </div>
+              <p className="text-xs text-stone-600">Gorilla trekking bookings up 34% this week</p>
+            </div>
+
+            <div className="bg-sunshine-50 p-3 rounded-lg">
+              <div className="flex items-center space-x-2 mb-2">
+                <Clock className="h-4 w-4 text-sunshine-600" />
+                <span className="text-sm font-medium text-stone-900">Best Time</span>
+              </div>
+              <p className="text-xs text-stone-600">AI suggests visiting between 2-4 PM today</p>
+            </div>
+
+            <div className="bg-earth-50 p-3 rounded-lg">
+              <div className="flex items-center space-x-2 mb-2">
+                <Users className="h-4 w-4 text-earth-600" />
+                <span className="text-sm font-medium text-stone-900">Crowd Level</span>
+              </div>
+              <p className="text-xs text-stone-600">Moderate crowds expected - perfect timing!</p>
+            </div>
+          </div>
+
+          <button className="w-full mt-4 bg-gradient-to-r from-forest-500 to-forest-600 text-white py-2 px-4 rounded-lg text-sm font-medium hover:from-forest-600 hover:to-forest-700 transition-all">
+            Get Personalized Plan
+          </button>
+        </div>
+      </div>
 
       {/* Footer */}
       <footer className="bg-stone-900 text-white py-12 px-4 sm:px-6 lg:px-8 mt-16">
