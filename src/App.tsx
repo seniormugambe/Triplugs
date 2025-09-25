@@ -1038,7 +1038,6 @@ const notifications = [
   { id: 3, type: 'ai', message: 'AI Tip: Best time to visit Bwindi is 2-4 PM today', time: '15 min ago', unread: true },
   { id: 4, type: 'weather', message: 'AI Weather Alert: Perfect conditions for gorilla trekking!', time: '1 hour ago', unread: false },
   { id: 5, type: 'ai', message: 'Price drop detected: Cultural tour now 20% off', time: '2 hours ago', unread: false },
-import { Search, Calendar, MapPin, Users, Truck, Wrench, Plus, Star, Clock, DollarSign, Filter, Menu, X, User, Settings, Bell, Heart, Bed, Camera, Mountain, Building, Wifi, Car, Coffee, Utensils } from 'lucide-react';
 
 function App() {
   const [activeTab, setActiveTab] = useState<StakeholderType>('seeker');
@@ -1203,8 +1202,10 @@ function App() {
                     <span className="font-medium">{tab.label}</span>
                   </button>
                 );
-              <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">Stay</a>
-              <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">Explore</a>
+              <>
+                <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">Stay</a>
+                <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">Explore</a>
+              </>
               })}
             </nav>
 
