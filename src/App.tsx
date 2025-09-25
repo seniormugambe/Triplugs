@@ -1038,7 +1038,7 @@ const notifications = [
   { id: 3, type: 'ai', message: 'AI Tip: Best time to visit Bwindi is 2-4 PM today', time: '15 min ago', unread: true },
   { id: 4, type: 'weather', message: 'AI Weather Alert: Perfect conditions for gorilla trekking!', time: '1 hour ago', unread: false },
   { id: 5, type: 'ai', message: 'Price drop detected: Cultural tour now 20% off', time: '2 hours ago', unread: false },
-];
+import { Search, Calendar, MapPin, Users, Truck, Wrench, Plus, Star, Clock, DollarSign, Filter, Menu, X, User, Settings, Bell, Heart, Bed, Camera, Mountain, Building, Wifi, Car, Coffee, Utensils } from 'lucide-react';
 
 function App() {
   const [activeTab, setActiveTab] = useState<StakeholderType>('seeker');
@@ -1086,6 +1086,70 @@ function App() {
       document.documentElement.classList.add('dark');
     } else {
       document.documentElement.classList.remove('dark');
+    }
+
+    if (activeCategory === 'accommodation') {
+      return (
+        <div className="space-y-6">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900">Find Your Perfect Stay</h2>
+              <p className="text-gray-600">Discover amazing accommodations for your next adventure</p>
+            </div>
+            <div className="flex items-center space-x-4">
+              <select className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                <option>All Types</option>
+                <option>Hotels</option>
+                <option>Resorts</option>
+                <option>Villas</option>
+                <option>Lodges</option>
+              </select>
+              <select className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                <option>Price Range</option>
+                <option>Under $100</option>
+                <option>$100 - $200</option>
+                <option>$200 - $300</option>
+                <option>$300+</option>
+              </select>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {accommodations.map(renderAccommodationCard)}
+          </div>
+        </div>
+      );
+    }
+
+    if (activeCategory === 'tourism') {
+      return (
+        <div className="space-y-6">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900">Explore Amazing Destinations</h2>
+              <p className="text-gray-600">Discover world-famous landmarks and hidden gems</p>
+            </div>
+            <div className="flex items-center space-x-4">
+              <select className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                <option>All Types</option>
+                <option>Landmarks</option>
+                <option>Historical Sites</option>
+                <option>Natural Wonders</option>
+                <option>Monuments</option>
+              </select>
+              <select className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                <option>All Countries</option>
+                <option>France</option>
+                <option>Peru</option>
+                <option>Australia</option>
+                <option>India</option>
+              </select>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {tourismPoints.map(renderTourismCard)}
+          </div>
+        </div>
+      );
     }
   };
 
@@ -1139,6 +1203,8 @@ function App() {
                     <span className="font-medium">{tab.label}</span>
                   </button>
                 );
+              <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">Stay</a>
+              <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">Explore</a>
               })}
             </nav>
 
@@ -3599,7 +3665,7 @@ function App() {
                 <h3 className="text-2xl font-bold">TourismHub</h3>
               </div>
               <p className="text-stone-400">
-                Connecting travelers, organizers, transport providers, and equipment rentals for unforgettable experiences.
+                  <Mountain className="w-6 h-6 text-blue-400" />
               </p>
             </div>
             <div>
@@ -3610,6 +3676,8 @@ function App() {
                 <li>Reviews & Ratings</li>
                 <li>Travel Planning</li>
               </ul>
+                  <li><a href="#" className="hover:text-white transition-colors">Accommodation</a></li>
+                  <li><a href="#" className="hover:text-white transition-colors">Tourism Guide</a></li>
             </div>
             <div>
               <h4 className="text-lg font-semibold mb-4">For Providers</h4>
@@ -3638,5 +3706,86 @@ function App() {
     </div>
   );
 }
+  const renderAccommodationCard = (accommodation: any) => (
+    <div key={accommodation.id} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+      <div className="relative">
+        <img src={accommodation.image} alt={accommodation.name} className="w-full h-48 object-cover" />
+        <div className="absolute top-4 right-4 bg-white px-2 py-1 rounded-full text-sm font-semibold text-purple-600">
+          {accommodation.type}
+        </div>
+        <button className="absolute top-4 left-4 p-2 bg-white/80 rounded-full hover:bg-white transition-colors">
+          <Heart className="w-4 h-4 text-gray-600" />
+        </button>
+      </div>
+      <div className="p-6">
+        <div className="flex justify-between items-start mb-2">
+          <h3 className="text-lg font-semibold text-gray-900 line-clamp-1">{accommodation.name}</h3>
+          <div className="flex items-center space-x-1">
+            <Star className="w-4 h-4 text-yellow-400 fill-current" />
+            <span className="text-sm text-gray-600">{accommodation.rating}</span>
+          </div>
+        </div>
+        <div className="flex items-center text-gray-600 mb-3">
+          <MapPin className="w-4 h-4 mr-1" />
+          <span className="text-sm">{accommodation.location}</span>
+        </div>
+        <div className="flex flex-wrap gap-2 mb-4">
+          {accommodation.amenities.slice(0, 4).map((amenity: string, index: number) => (
+            <div key={index} className="flex items-center space-x-1 bg-gray-100 px-2 py-1 rounded-full">
+              {getAmenityIcon(amenity)}
+              <span className="text-xs text-gray-600">{amenity}</span>
+            </div>
+          ))}
+        </div>
+        <div className="flex justify-between items-center">
+          <div className="text-2xl font-bold text-purple-600">${accommodation.price}<span className="text-sm text-gray-500">/night</span></div>
+          <button className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-2 rounded-lg hover:from-purple-600 hover:to-pink-600 transition-all duration-200 font-medium">
+            Book Now
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderTourismCard = (point: any) => (
+    <div key={point.id} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+      <div className="relative">
+        <img src={point.image} alt={point.name} className="w-full h-48 object-cover" />
+        <div className="absolute top-4 right-4 bg-white px-2 py-1 rounded-full text-sm font-semibold text-indigo-600">
+          {point.type}
+        </div>
+        <button className="absolute top-4 left-4 p-2 bg-white/80 rounded-full hover:bg-white transition-colors">
+          <Heart className="w-4 h-4 text-gray-600" />
+        </button>
+      </div>
+      <div className="p-6">
+        <div className="flex justify-between items-start mb-2">
+          <h3 className="text-lg font-semibold text-gray-900 line-clamp-1">{point.name}</h3>
+          <div className="flex items-center space-x-1">
+            <Star className="w-4 h-4 text-yellow-400 fill-current" />
+            <span className="text-sm text-gray-600">{point.rating}</span>
+          </div>
+        </div>
+        <div className="flex items-center text-gray-600 mb-3">
+          <MapPin className="w-4 h-4 mr-1" />
+          <span className="text-sm">{point.location}</span>
+        </div>
+        <p className="text-gray-600 text-sm mb-3 line-clamp-2">{point.description}</p>
+        <div className="flex items-center text-gray-500 mb-4">
+          <Clock className="w-4 h-4 mr-1" />
+          <span className="text-sm">Visit time: {point.visitTime}</span>
+        </div>
+        <div className="flex justify-between items-center">
+          <button className="text-indigo-600 font-medium hover:text-indigo-700 transition-colors">
+            Learn More
+          </button>
+          <button className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white px-6 py-2 rounded-lg hover:from-indigo-600 hover:to-purple-600 transition-all duration-200 font-medium">
+            Plan Visit
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
 
 export default App;
