@@ -1140,6 +1140,26 @@ function App() {
                   </button>
                 );
               })}
+              <button
+                onClick={() => setActiveTab('accommodation')}
+                className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                  activeTab === 'accommodation'
+                    ? 'bg-cyan-600 text-white shadow-lg'
+                    : 'text-gray-600 hover:text-cyan-600 hover:bg-cyan-50'
+                }`}
+              >
+                Stay
+              </button>
+              <button
+                onClick={() => setActiveTab('tourism')}
+                className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                  activeTab === 'tourism'
+                    ? 'bg-cyan-600 text-white shadow-lg'
+                    : 'text-gray-600 hover:text-cyan-600 hover:bg-cyan-50'
+                }`}
+              >
+                Explore
+              </button>
             </nav>
 
             <div className="flex items-center space-x-4">
