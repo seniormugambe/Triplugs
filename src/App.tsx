@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, MapPin, Truck, Wrench, Search, User, Menu, X, Star, Clock, Users, Camera, Compass, Mountain, Heart, Share2, Filter, Zap, TrendingUp, Award, MessageCircle, Bell, Globe, Wifi, Coffee, Car, Music, Shield, CheckCircle, AlertCircle, XCircle, Eye, ThumbsUp, Bookmark, Gift, CreditCard, Smartphone, Cloud, Route, MoreHorizontal, DollarSign, CloudRain, Navigation, AlertTriangle, Umbrella, Sun, Wind, Thermometer, Banknote, Calculator, MapIcon, Phone, FileText, Settings, Moon } from 'lucide-react';
+import { AccommodationList } from './components/AccommodationList';
 
 interface Event {
   id: string;
@@ -3150,7 +3151,7 @@ function App() {
                   Rent high-quality equipment for your adventures or list your equipment for rental income.
                 </p>
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {sampleEquipment.map((equipment) => (
                   <div key={equipment.id} className="bg-white rounded-2xl nature-card overflow-hidden group">
@@ -3184,6 +3185,10 @@ function App() {
                 ))}
               </div>
             </div>
+          )}
+
+          {!activeService && activeTab === 'accommodation' && (
+            <AccommodationList />
           )}
         </div>
       </section>
