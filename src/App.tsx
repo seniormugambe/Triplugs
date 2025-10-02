@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, MapPin, Truck, Wrench, Search, User, Menu, X, Star, Clock, Users, Camera, Compass, Mountain, Heart, Share2, Filter, Zap, TrendingUp, Award, MessageCircle, Bell, Globe, Wifi, Coffee, Car, Music, Shield, CheckCircle, AlertCircle, XCircle, Eye, ThumbsUp, Bookmark, Gift, CreditCard, Smartphone, Cloud, Route, MoreHorizontal, DollarSign, CloudRain, Navigation, AlertTriangle, Umbrella, Sun, Wind, Thermometer, Banknote, Calculator, MapIcon, Phone, FileText, Settings, Moon } from 'lucide-react';
+import { Calendar, MapPin, Truck, Wrench, Search, User, Menu, X, Star, Clock, Users, Camera, Compass, Mountain, Heart, Share2, Filter, Zap, TrendingUp, Award, MessageCircle, Bell, Globe, Wifi, Coffee, Car, Music, Shield, CheckCircle, AlertCircle, XCircle, Eye, ThumbsUp, Bookmark, Gift, CreditCard, Smartphone, Cloud, Route, MoreHorizontal, DollarSign, CloudRain, Navigation, AlertTriangle, Umbrella, Sun, Wind, Thermometer, Banknote, Calculator, Map as MapIcon, Phone, FileText, Settings, Moon } from 'lucide-react';
 import { AccommodationList } from './components/AccommodationList';
 
 interface Event {
