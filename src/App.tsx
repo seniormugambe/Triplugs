@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, MapPin, Truck, Wrench, Search, User, Menu, X, Star, Clock, Users, Camera, Compass, Mountain, Heart, Share2, Filter, Zap, TrendingUp, Award, MessageCircle, Bell, Globe, Wifi, Coffee, Car, Music, Shield, CheckCircle, AlertCircle, XCircle, Eye, ThumbsUp, Bookmark, Gift, CreditCard, Smartphone, Cloud, Route, MoreHorizontal, DollarSign, CloudRain, Navigation, AlertTriangle, Umbrella, Sun, Wind, Thermometer, Banknote, Calculator, Map as MapIcon, Phone, FileText, Settings, Moon } from 'lucide-react';
+import { Calendar, MapPin, Truck, Wrench, Search, User, Menu, X, Star, Clock, Users, Camera, Compass, Mountain, Heart, Share2, Filter, Zap, TrendingUp, Award, MessageCircle, Bell, Globe, Wifi, Coffee, Car, Music, Shield, CheckCircle, AlertCircle, XCircle, Eye, ThumbsUp, Bookmark, Gift, CreditCard, Smartphone, Cloud, Route, MoreHorizontal, DollarSign, CloudRain, Navigation, AlertTriangle, Umbrella, Sun, Wind, Thermometer, Banknote, Calculator, Map as MapIcon, Phone, FileText, Settings, Moon, ShoppingBag } from 'lucide-react';
 import { AccommodationList } from './components/AccommodationList';
+import { Shop } from './components/Shop';
 
 interface Event {
   id: string;
@@ -1160,6 +1161,16 @@ function App() {
                 }`}
               >
                 Explore
+              </button>
+              <button
+                onClick={() => setActiveTab('shop')}
+                className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                  activeTab === 'shop'
+                    ? 'bg-cyan-600 text-white shadow-lg'
+                    : 'text-gray-600 hover:text-cyan-600 hover:bg-cyan-50'
+                }`}
+              >
+                Shop
               </button>
             </nav>
 
@@ -3189,6 +3200,10 @@ function App() {
 
           {!activeService && activeTab === 'accommodation' && (
             <AccommodationList />
+          )}
+
+          {!activeService && activeTab === 'shop' && (
+            <Shop />
           )}
         </div>
       </section>
