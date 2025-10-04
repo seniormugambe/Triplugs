@@ -1,13 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Search,
-  Filter,
-  ShoppingCart as ShoppingCartIcon,
-  Grid,
-  List,
-  Check,
-  Package,
-} from 'lucide-react';
+import { Search, Filter, ShoppingCart as ShoppingCartIcon, Grid2x2 as Grid, List, Check, Package } from 'lucide-react';
 import { Product, CartItem, Category, supabase, getSessionId } from '../lib/ecommerce';
 import { ProductCard } from './ProductCard';
 import { ProductDetail } from './ProductDetail';
