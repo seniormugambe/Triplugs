@@ -1124,53 +1124,83 @@ function App() {
             </div>
             
             {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center space-x-8">
-              {stakeholderTabs.map((tab) => {
-                const Icon = tab.icon;
-                return (
-                  <button
-                    key={tab.id}
-                    onClick={() => setActiveTab(tab.id)}
-                    className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-200 ${
-                      activeTab === tab.id
-                        ? `${tab.color} text-white shadow-lg`
-                        : 'text-stone-700 hover:bg-earth-100'
-                    }`}
-                  >
-                    <Icon className="h-5 w-5" />
-                    <span className="font-medium">{tab.label}</span>
-                  </button>
-                );
-              })}
+            <nav className="hidden lg:flex items-center space-x-2">
               <button
-                onClick={() => setActiveTab('accommodation')}
-                className={`px-4 py-2 rounded-lg font-medium transition-all ${
-                  activeTab === 'accommodation'
-                    ? 'bg-cyan-600 text-white shadow-lg'
-                    : 'text-gray-600 hover:text-cyan-600 hover:bg-cyan-50'
+                onClick={() => setActiveTab('seeker')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${
+                  activeTab === 'seeker'
+                    ? 'bg-blue-600 text-white shadow-lg'
+                    : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-dark-200'
                 }`}
               >
+                <Search className="h-4 w-4" />
+                Events
+              </button>
+              <button
+                onClick={() => setActiveTab('accommodation')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${
+                  activeTab === 'accommodation'
+                    ? 'bg-blue-600 text-white shadow-lg'
+                    : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-dark-200'
+                }`}
+              >
+                <MapPin className="h-4 w-4" />
                 Stay
               </button>
               <button
-                onClick={() => setActiveTab('tourism')}
-                className={`px-4 py-2 rounded-lg font-medium transition-all ${
-                  activeTab === 'tourism'
-                    ? 'bg-cyan-600 text-white shadow-lg'
-                    : 'text-gray-600 hover:text-cyan-600 hover:bg-cyan-50'
+                onClick={() => setActiveTab('shop')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${
+                  activeTab === 'shop'
+                    ? 'bg-blue-600 text-white shadow-lg'
+                    : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-dark-200'
                 }`}
               >
-                Explore
+                <ShoppingBag className="h-4 w-4" />
+                Shop
               </button>
               <button
-                onClick={() => setActiveTab('shop')}
-                className={`px-4 py-2 rounded-lg font-medium transition-all ${
-                  activeTab === 'shop'
-                    ? 'bg-cyan-600 text-white shadow-lg'
-                    : 'text-gray-600 hover:text-cyan-600 hover:bg-cyan-50'
+                onClick={() => setActiveTab('organizer')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${
+                  activeTab === 'organizer'
+                    ? 'bg-blue-600 text-white shadow-lg'
+                    : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-dark-200'
                 }`}
               >
-                Shop
+                <Calendar className="h-4 w-4" />
+                Organize
+              </button>
+              <button
+                onClick={() => setActiveTab('transport')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${
+                  activeTab === 'transport'
+                    ? 'bg-blue-600 text-white shadow-lg'
+                    : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-dark-200'
+                }`}
+              >
+                <Truck className="h-4 w-4" />
+                Transport
+              </button>
+              <button
+                onClick={() => setActiveTab('equipment')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${
+                  activeTab === 'equipment'
+                    ? 'bg-blue-600 text-white shadow-lg'
+                    : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-dark-200'
+                }`}
+              >
+                <Wrench className="h-4 w-4" />
+                Equipment
+              </button>
+              <button
+                onClick={() => setActiveTab('tourism')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${
+                  activeTab === 'tourism'
+                    ? 'bg-blue-600 text-white shadow-lg'
+                    : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-dark-200'
+                }`}
+              >
+                <Compass className="h-4 w-4" />
+                Explore
               </button>
             </nav>
 
@@ -1335,28 +1365,106 @@ function App() {
 
           {/* Mobile Navigation */}
           {isMenuOpen && (
-            <div className="lg:hidden py-4 border-t border-earth-200">
+            <div className="lg:hidden py-4 border-t border-earth-200 dark:border-dark-300">
               <div className="space-y-2">
-                {stakeholderTabs.map((tab) => {
-                  const Icon = tab.icon;
-                  return (
-                    <button
-                      key={tab.id}
-                      onClick={() => {
-                        setActiveTab(tab.id);
-                        setIsMenuOpen(false);
-                      }}
-                      className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 ${
-                        activeTab === tab.id
-                          ? `${tab.color} text-white`
-                          : 'text-stone-700 hover:bg-earth-100'
-                      }`}
-                    >
-                      <Icon className="h-5 w-5" />
-                      <span className="font-medium">{tab.label}</span>
-                    </button>
-                  );
-                })}
+                <button
+                  onClick={() => {
+                    setActiveTab('seeker');
+                    setIsMenuOpen(false);
+                  }}
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
+                    activeTab === 'seeker'
+                      ? 'bg-blue-600 text-white'
+                      : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-dark-200'
+                  }`}
+                >
+                  <Search className="h-5 w-5" />
+                  <span className="font-medium">Events</span>
+                </button>
+                <button
+                  onClick={() => {
+                    setActiveTab('accommodation');
+                    setIsMenuOpen(false);
+                  }}
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
+                    activeTab === 'accommodation'
+                      ? 'bg-blue-600 text-white'
+                      : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-dark-200'
+                  }`}
+                >
+                  <MapPin className="h-5 w-5" />
+                  <span className="font-medium">Stay</span>
+                </button>
+                <button
+                  onClick={() => {
+                    setActiveTab('shop');
+                    setIsMenuOpen(false);
+                  }}
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
+                    activeTab === 'shop'
+                      ? 'bg-blue-600 text-white'
+                      : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-dark-200'
+                  }`}
+                >
+                  <ShoppingBag className="h-5 w-5" />
+                  <span className="font-medium">Shop</span>
+                </button>
+                <button
+                  onClick={() => {
+                    setActiveTab('organizer');
+                    setIsMenuOpen(false);
+                  }}
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
+                    activeTab === 'organizer'
+                      ? 'bg-blue-600 text-white'
+                      : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-dark-200'
+                  }`}
+                >
+                  <Calendar className="h-5 w-5" />
+                  <span className="font-medium">Organize</span>
+                </button>
+                <button
+                  onClick={() => {
+                    setActiveTab('transport');
+                    setIsMenuOpen(false);
+                  }}
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
+                    activeTab === 'transport'
+                      ? 'bg-blue-600 text-white'
+                      : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-dark-200'
+                  }`}
+                >
+                  <Truck className="h-5 w-5" />
+                  <span className="font-medium">Transport</span>
+                </button>
+                <button
+                  onClick={() => {
+                    setActiveTab('equipment');
+                    setIsMenuOpen(false);
+                  }}
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
+                    activeTab === 'equipment'
+                      ? 'bg-blue-600 text-white'
+                      : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-dark-200'
+                  }`}
+                >
+                  <Wrench className="h-5 w-5" />
+                  <span className="font-medium">Equipment</span>
+                </button>
+                <button
+                  onClick={() => {
+                    setActiveTab('tourism');
+                    setIsMenuOpen(false);
+                  }}
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
+                    activeTab === 'tourism'
+                      ? 'bg-blue-600 text-white'
+                      : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-dark-200'
+                  }`}
+                >
+                  <Compass className="h-5 w-5" />
+                  <span className="font-medium">Explore</span>
+                </button>
               </div>
             </div>
           )}
