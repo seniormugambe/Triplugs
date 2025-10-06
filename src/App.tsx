@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, MapPin, Truck, Wrench, Search, User, Menu, X, Star, Clock, Users, Camera, Compass, Mountain, Heart, Share2, Filter, Zap, TrendingUp, Award, MessageCircle, Bell, Globe, Wifi, Coffee, Car, Music, Shield, CheckCircle, AlertCircle, XCircle, Eye, ThumbsUp, Bookmark, Gift, CreditCard, Smartphone, Cloud, Route, MoreHorizontal, DollarSign, CloudRain, Navigation, AlertTriangle, Umbrella, Sun, Wind, Thermometer, Banknote, Calculator, Map as MapIcon, Phone, FileText, Settings, Moon, ShoppingBag } from 'lucide-react';
+import { Calendar, MapPin, Truck, Wrench, Search, User, Menu, X, Star, Clock, Users, Camera, Compass, Mountain, Heart, Share2, Filter, Zap, TrendingUp, Award, MessageCircle, Bell, Globe, Wifi, Coffee, Car, Music, Shield, CheckCircle, AlertCircle, XCircle, Eye, ThumbsUp, Bookmark, Gift, CreditCard, Smartphone, Cloud, Route, MoreHorizontal, DollarSign, CloudRain, Navigation, AlertTriangle, Umbrella, Sun, Wind, Thermometer, Banknote, Calculator, Map as MapIcon, Phone, FileText, Settings, Moon, ShoppingBag, Home } from 'lucide-react';
 import { AccommodationList } from './components/AccommodationList';
 import { Shop } from './components/Shop';
+import { HomePage } from './components/HomePage';
 
 interface Event {
   id: string;
@@ -1043,7 +1044,7 @@ const notifications = [
 ];
 
 function App() {
-  const [activeTab, setActiveTab] = useState<StakeholderType>('seeker');
+  const [activeTab, setActiveTab] = useState<StakeholderType | 'home'>('home');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedVenueCategory, setSelectedVenueCategory] = useState('all');
@@ -1126,7 +1127,24 @@ function App() {
             {/* Desktop Navigation */}
             <nav className="hidden lg:flex items-center space-x-2">
               <button
-                onClick={() => setActiveTab('seeker')}
+                onClick={() => {
+                  setActiveTab('home');
+                  setActiveService(null);
+                }}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${
+                  activeTab === 'home'
+                    ? 'bg-blue-600 text-white shadow-lg'
+                    : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-dark-200'
+                }`}
+              >
+                <Home className="h-4 w-4" />
+                Home
+              </button>
+              <button
+                onClick={() => {
+                  setActiveTab('seeker');
+                  setActiveService(null);
+                }}
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${
                   activeTab === 'seeker'
                     ? 'bg-blue-600 text-white shadow-lg'
@@ -1137,7 +1155,10 @@ function App() {
                 Events
               </button>
               <button
-                onClick={() => setActiveTab('accommodation')}
+                onClick={() => {
+                  setActiveTab('accommodation');
+                  setActiveService(null);
+                }}
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${
                   activeTab === 'accommodation'
                     ? 'bg-blue-600 text-white shadow-lg'
@@ -1148,7 +1169,10 @@ function App() {
                 Stay
               </button>
               <button
-                onClick={() => setActiveTab('shop')}
+                onClick={() => {
+                  setActiveTab('shop');
+                  setActiveService(null);
+                }}
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${
                   activeTab === 'shop'
                     ? 'bg-blue-600 text-white shadow-lg'
@@ -1159,7 +1183,10 @@ function App() {
                 Shop
               </button>
               <button
-                onClick={() => setActiveTab('organizer')}
+                onClick={() => {
+                  setActiveTab('organizer');
+                  setActiveService(null);
+                }}
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${
                   activeTab === 'organizer'
                     ? 'bg-blue-600 text-white shadow-lg'
@@ -1170,7 +1197,10 @@ function App() {
                 Organize
               </button>
               <button
-                onClick={() => setActiveTab('transport')}
+                onClick={() => {
+                  setActiveTab('transport');
+                  setActiveService(null);
+                }}
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${
                   activeTab === 'transport'
                     ? 'bg-blue-600 text-white shadow-lg'
@@ -1531,116 +1561,23 @@ function App() {
         </div>
       )}
 
-      {/* Hero Section */}
-      <section className="relative py-16 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto text-center">
-          <div className="flex items-center justify-center mb-4">
-            <div className="bg-gradient-to-r from-forest-500 to-forest-600 text-white px-6 py-2 rounded-full flex items-center space-x-2">
-              <Zap className="h-5 w-5 animate-pulse" />
-              <span className="font-medium">AI-Powered Tourism Platform</span>
-            </div>
-          </div>
-          
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-stone-900 mb-6">
-            Your AI Gateway to{' '}
-            <span className="bg-gradient-to-r from-forest-600 via-sunshine-600 to-earth-600 bg-clip-text text-transparent">
-              Uganda's Wonders
-            </span>
-          </h2>
-          <p className="text-xl text-stone-600 mb-8 max-w-3xl mx-auto">
-            Experience Uganda like never before with AI-powered recommendations, smart cultural insights, and personalized adventure planning.
-          </p>
-
-          {/* AI Stats */}
-          <div className="flex items-center justify-center space-x-8 mb-8 text-sm">
-            <div className="flex items-center space-x-2">
-              <div className="w-3 h-3 bg-forest-500 rounded-full animate-pulse"></div>
-              <span className="text-stone-600">AI analyzing 15.2K+ tourist preferences</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Zap className="h-4 w-4 text-sunshine-500" />
-              <span className="text-stone-600">Smart recommendations in real-time</span>
-            </div>
-          </div>
-          
-          {/* Main Category Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
-            {stakeholderTabs.map((tab) => {
-              const Icon = tab.icon;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => {
-                    setActiveTab(tab.id);
-                    setActiveService(null);
-                  }}
-                  className={`p-6 rounded-2xl border-2 border-stone-300 bg-white/90 backdrop-blur-sm hover:bg-white transition-all duration-300 group shadow-md ${
-                    activeTab === tab.id && !activeService ? 'ring-2 ring-offset-2 ring-forest-500 border-forest-300 shadow-lg' : 'hover:border-stone-400 hover:shadow-lg'
-                  }`}
-                >
-                  <div className={`w-16 h-16 mx-auto mb-4 rounded-full ${tab.color} flex items-center justify-center group-hover:scale-110 transition-transform duration-200`}>
-                    <Icon className="h-8 w-8 text-white" />
-                  </div>
-                  <h3 className="text-lg font-semibold text-stone-900 mb-2">{tab.label}</h3>
-                  <p className="text-stone-600 text-sm mb-2">
-                    {tab.id === 'seeker' && 'AI-curated experiences just for you'}
-                    {tab.id === 'organizer' && 'Smart event management with AI insights'}
-                    {tab.id === 'transport' && 'AI-optimized routes and pricing'}
-                    {tab.id === 'equipment' && 'Smart equipment recommendations'}
-                  </p>
-                  {/* AI Personalization Indicator */}
-                  <div className="flex items-center justify-center space-x-1 text-xs">
-                    <Zap className="h-3 w-3 text-forest-500" />
-                    <span className="text-forest-600 font-medium">
-                      {tab.id === 'seeker' && `${Math.floor(Math.random() * 20) + 80}% match`}
-                      {tab.id === 'organizer' && 'AI-powered'}
-                      {tab.id === 'transport' && 'Smart routing'}
-                      {tab.id === 'equipment' && 'Auto-suggest'}
-                    </span>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Additional Services Section */}
-          <div className="mt-16">
-            <h3 className="text-2xl font-bold text-stone-900 text-center mb-8">Additional Tourism Services</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
-              {additionalServices.map((service) => {
-                const Icon = service.icon;
-                return (
-                  <button
-                    key={service.id}
-                    onClick={() => {
-                      setActiveService(service.id);
-                      setActiveTab('seeker'); // Reset main tab
-                    }}
-                    className={`p-4 rounded-xl border-2 border-stone-300 bg-white/90 backdrop-blur-sm hover:bg-white transition-all duration-300 group shadow-md ${
-                      activeService === service.id ? 'ring-2 ring-offset-2 ring-forest-500 border-forest-300 shadow-lg' : 'hover:border-stone-400 hover:shadow-lg'
-                    }`}
-                  >
-                    <div className={`w-12 h-12 mx-auto mb-3 rounded-full ${service.color} flex items-center justify-center group-hover:scale-110 transition-transform duration-200`}>
-                      <Icon className="h-6 w-6 text-white" />
-                    </div>
-                    <h4 className="text-sm font-semibold text-stone-900 mb-1">{service.label}</h4>
-                    <p className="text-xs text-stone-600 mb-2">{service.description}</p>
-                    <div className="flex items-center justify-center space-x-1">
-                      <Zap className="h-2 w-2 text-forest-500" />
-                      <span className="text-xs text-forest-600 font-medium">AI-Enhanced</span>
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Home Page */}
+      {activeTab === 'home' && (
+        <HomePage
+          onNavigate={(tab: string, service?: string) => {
+            setActiveTab(tab as StakeholderType);
+            if (service) {
+              setActiveService(service as ServiceType);
+            }
+          }}
+        />
+      )}
 
       {/* Content Section */}
-      <section className="py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          {/* Service-Specific Content */}
+      {activeTab !== 'home' && (
+        <section className="py-12 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto">
+            {/* Service-Specific Content */}
           {activeService === 'ai-guide' && (
             <div>
               <div className="text-center mb-12">
@@ -3315,6 +3252,7 @@ function App() {
           )}
         </div>
       </section>
+      )}
 
       {/* Integrated Booking Modal */}
       {showBookingModal && selectedEvent && (
