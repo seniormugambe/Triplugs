@@ -3697,67 +3697,6 @@ function App() {
         </div>
       )}
 
-      {/* Quick Stats Sidebar */}
-      <div className="fixed left-6 top-1/2 transform -translate-y-1/2 z-40 hidden xl:block">
-        <div className="bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl shadow-2xl p-5 w-72 text-white">
-          <div className="flex items-center justify-between mb-5">
-            <div className="flex items-center gap-2">
-              <TrendingUp className="h-6 w-6" />
-              <h4 className="font-bold text-lg">Live Stats</h4>
-            </div>
-            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-          </div>
-
-          <div className="space-y-4">
-            <div className="bg-white/10 backdrop-blur-sm p-4 rounded-xl border border-white/20">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-blue-100 text-sm">Accommodations</span>
-                <MapPin className="h-4 w-4 text-blue-200" />
-              </div>
-              <div className="text-2xl font-bold">8</div>
-              <div className="text-xs text-blue-200 mt-1">Properties available</div>
-            </div>
-
-            <div className="bg-white/10 backdrop-blur-sm p-4 rounded-xl border border-white/20">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-blue-100 text-sm">Shop Products</span>
-                <ShoppingBag className="h-4 w-4 text-blue-200" />
-              </div>
-              <div className="text-2xl font-bold">12</div>
-              <div className="text-xs text-blue-200 mt-1">Items in stock</div>
-            </div>
-
-            <div className="bg-white/10 backdrop-blur-sm p-4 rounded-xl border border-white/20">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-blue-100 text-sm">Active Events</span>
-                <Calendar className="h-4 w-4 text-blue-200" />
-              </div>
-              <div className="text-2xl font-bold">15+</div>
-              <div className="text-xs text-blue-200 mt-1">Experiences to explore</div>
-            </div>
-
-            <div className="bg-gradient-to-r from-green-500 to-emerald-500 p-4 rounded-xl">
-              <div className="flex items-center gap-2 mb-1">
-                <Star className="h-4 w-4 fill-white" />
-                <span className="text-sm font-semibold">Top Rated</span>
-              </div>
-              <div className="text-xs">Mountain View Lodge</div>
-              <div className="text-xs opacity-90">5.0 rating • Featured</div>
-            </div>
-          </div>
-
-          <div className="mt-5 pt-4 border-t border-white/20">
-            <div className="flex items-center justify-between text-xs text-blue-100">
-              <span>Updated: Just now</span>
-              <div className="flex items-center gap-1">
-                <div className="w-1.5 h-1.5 bg-green-400 rounded-full"></div>
-                <span>Live</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Footer */}
       <footer className="bg-stone-900 text-white py-12 px-4 sm:px-6 lg:px-8 mt-16">
         <div className="max-w-7xl mx-auto">
