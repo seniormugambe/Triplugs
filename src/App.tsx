@@ -1120,7 +1120,7 @@ function App() {
             <div className="flex items-center space-x-2">
               <Compass className="h-8 w-8 text-forest-600 dark:text-forest-400" />
               <h1 className="text-2xl font-bold bg-gradient-to-r from-forest-600 to-earth-600 dark:from-forest-400 dark:to-earth-400 bg-clip-text text-transparent">
-                TourismHub
+                Triplugs
               </h1>
             </div>
             
@@ -1166,7 +1166,7 @@ function App() {
                 }`}
               >
                 <MapPin className="h-4 w-4" />
-                Stay
+                Hospitality
               </button>
               <button
                 onClick={() => {
