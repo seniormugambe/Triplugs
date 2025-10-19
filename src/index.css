@@ -1,73 +1,185 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Tourism-themed custom styles */
+/* Triplugs green paradise theme styles */
 @layer base {
   body {
-    background-color: #e4e4e4;
-    transition: background-color 0.3s ease;
+    background: linear-gradient(135deg, #f0fff4 0%, #f0fdf4 50%, #ecfdf5 100%);
+    font-family: 'Inter', system-ui, sans-serif;
+    transition: background 0.3s ease;
   }
   
   .dark body {
-    background-color: #1a1a1a;
+    background: linear-gradient(135deg, #064e3b 0%, #14532d 50%, #1a202c 100%);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-weight: 600;
   }
 }
 
 @layer components {
-  /* Natural texture patterns */
-  .nature-pattern {
+  /* Triplugs green paradise patterns */
+  .triplugs-pattern {
     background-image: 
-      radial-gradient(circle at 20% 50%, rgba(58, 155, 58, 0.15) 0%, transparent 50%),
-      radial-gradient(circle at 80% 20%, rgba(184, 149, 90, 0.15) 0%, transparent 50%),
-      radial-gradient(circle at 40% 80%, rgba(255, 200, 42, 0.15) 0%, transparent 50%);
+      radial-gradient(circle at 25% 25%, rgba(34, 197, 94, 0.12) 0%, transparent 50%),
+      radial-gradient(circle at 75% 75%, rgba(16, 185, 129, 0.12) 0%, transparent 50%),
+      radial-gradient(circle at 50% 50%, rgba(56, 161, 105, 0.08) 0%, transparent 50%);
   }
   
-  .dark .nature-pattern {
+  .green-paradise {
     background-image: 
-      radial-gradient(circle at 20% 50%, rgba(58, 155, 58, 0.08) 0%, transparent 50%),
-      radial-gradient(circle at 80% 20%, rgba(184, 149, 90, 0.08) 0%, transparent 50%),
-      radial-gradient(circle at 40% 80%, rgba(255, 200, 42, 0.08) 0%, transparent 50%);
+      linear-gradient(45deg, rgba(34, 197, 94, 0.06) 25%, transparent 25%),
+      linear-gradient(-45deg, rgba(34, 197, 94, 0.06) 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, rgba(34, 197, 94, 0.06) 75%),
+      linear-gradient(-45deg, transparent 75%, rgba(34, 197, 94, 0.06) 75%);
+    background-size: 20px 20px;
+    background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
   }
   
-  /* Card hover effects with natural shadows */
-  .nature-card {
-    box-shadow: 0 4px 6px -1px rgba(90, 70, 49, 0.1), 0 2px 4px -1px rgba(90, 70, 49, 0.06);
-    transition: all 0.3s ease;
+  /* Triplugs green card styles */
+  .triplugs-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(34, 197, 94, 0.15);
+    box-shadow: 
+      0 4px 6px -1px rgba(34, 197, 94, 0.15), 
+      0 2px 4px -1px rgba(34, 197, 94, 0.1),
+      0 0 0 1px rgba(34, 197, 94, 0.08);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
-  .nature-card:hover {
-    box-shadow: 0 20px 25px -5px rgba(90, 70, 49, 0.1), 0 10px 10px -5px rgba(90, 70, 49, 0.04);
-    transform: translateY(-2px);
+  .triplugs-card:hover {
+    transform: translateY(-6px) scale(1.03);
+    box-shadow: 
+      0 25px 30px -5px rgba(34, 197, 94, 0.2), 
+      0 15px 15px -5px rgba(34, 197, 94, 0.15),
+      0 0 0 1px rgba(34, 197, 94, 0.15);
   }
   
-  .dark .nature-card {
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+  .dark .triplugs-card {
+    background: rgba(6, 78, 59, 0.95);
+    border: 1px solid rgba(34, 197, 94, 0.25);
   }
   
-  .dark .nature-card:hover {
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
-    transform: translateY(-2px);
-  }
-  
-  /* Organic button styles */
-  .organic-btn {
+  /* Triplugs green buttons */
+  .triplugs-btn {
     position: relative;
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 50%, #15803d 100%);
+    border: none;
+    color: white;
+    font-weight: 700;
+    letter-spacing: 0.025em;
+    transition: all 0.3s ease;
     overflow: hidden;
+    box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
   }
   
-  .organic-btn::before {
+  .triplugs-btn::before {
     content: '';
     position: absolute;
     top: 0;
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transition: left 0.5s;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.6s ease;
   }
   
-  .organic-btn:hover::before {
+  .triplugs-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 30px rgba(34, 197, 94, 0.4);
+    background: linear-gradient(135deg, #16a34a 0%, #15803d 50%, #166534 100%);
+  }
+  
+  .triplugs-btn:hover::before {
     left: 100%;
+  }
+  
+  /* Forest-inspired accent elements */
+  .forest-accent {
+    background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);
+    position: relative;
+  }
+  
+  .forest-accent::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M20 20c0-5.5-4.5-10-10-10s-10 4.5-10 10 4.5 10 10 10 10-4.5 10-10zm10 0c0 5.5 4.5 10 10 10s10-4.5 10-10-4.5-10-10-10-10 4.5-10 10z'/%3E%3C/g%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+  
+  /* Uganda gradient backgrounds */
+  .emerald-bg {
+    background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
+  }
+  
+  .jungle-bg {
+    background: linear-gradient(135deg, #84cc16 0%, #65a30d 50%, #4d7c0f 100%);
+  }
+  
+  /* Text with Triplugs green gradient */
+  .triplugs-text {
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 50%, #10b981 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 800;
+  }
+  
+  /* Map customizations */
+  .tourism-map-overlay {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+  }
+  
+  /* Pulse animation for user location */
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.2);
+      opacity: 0.7;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  
+  /* Line clamp utility */
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Responsive Triplugs patterns */
+  @media (max-width: 768px) {
+    .triplugs-pattern {
+      background-size: 30px 30px;
+    }
+    
+    .green-paradise {
+      background-size: 15px 15px;
+    }
   }
 }
